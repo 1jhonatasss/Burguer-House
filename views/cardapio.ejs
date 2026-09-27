@@ -29,29 +29,36 @@
     </div>
 
     <!-- Header -->
-    <header class="header">
-        <div class="header-container">
-            <button class="btn-voltar" onclick="window.location.href='/'">
-                <i data-lucide="arrow-left"></i>
-                <span>Voltar</span>
-            </button>
+    <!-- Header -->
+<header class="header">
+    <div class="header-container">
+        <button class="btn-voltar" onclick="window.location.href='/'">
+            <i data-lucide="arrow-left"></i>
+            <span>Voltar</span>
+        </button>
 
-            <div class="header-logo">
-                <div class="logo-text">
-                    <h1>BURGER HOUSE</h1>
-                    <p>Os melhores hambúrgueres</p>
-                </div>
-            </div>
-
-            <!-- Entrega e Horário -->
-            <div class="header-entrega-info">
-                <div class="header-horario">
-    <span class="horario-label" id="horarioLabel">Hoje</span>
-    <span class="horario-tempo" id="horarioTempo">30 - 50 min</span>
-</div>
+        <div class="header-logo">
+            <div class="logo-text">
+                <h1>BURGER HOUSE</h1>
+                <p>Os melhores hambúrgueres</p>
             </div>
         </div>
-    </header>
+
+        <!-- Entrega e Horário -->
+        <div class="header-entrega-info">
+            <button class="btn-entrega-tipo" id="btnEntregaTipo">
+                <i data-lucide="bike"></i>
+                <span>Entrega</span>
+                <i data-lucide="chevron-down" class="chevron-icon"></i>
+            </button>
+            
+            <div class="header-horario">
+                <span class="horario-label" id="horarioLabel">Hoje</span>
+                <span class="horario-tempo" id="horarioTempo">30 - 50 min</span>
+            </div>
+        </div>
+    </div>
+</header>
 
     <!-- Modal Tipo de Entrega -->
     <div class="modal-entrega-tipo" id="modalEntregaTipo">
