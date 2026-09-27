@@ -44,22 +44,22 @@
             display: none;
         }
 
-        .mobile-version .container {
-            position: relative;
-            width: 100%;
-            min-height: 100vh;
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-            background: #0a0a0a;
-            padding-top: calc(2rem + env(safe-area-inset-top));
-            padding-bottom: calc(2rem + env(safe-area-inset-bottom));
-            padding-left: 1rem;
-            padding-right: 1rem;
-        }
+.mobile-version .container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: hidden;
+    background: #0a0a0a;
+    padding-top: calc(1.5rem + env(safe-area-inset-top));
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
 
         /* Background animado mobile */
         .mobile-version .bg-gradient {
@@ -755,7 +755,7 @@
             .mobile-version .container {
                 padding-top: calc(1rem + env(safe-area-inset-top));
                 padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-                justify-content: flex-start;
+              
             }
         }
 
