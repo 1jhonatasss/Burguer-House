@@ -1,133 +1,83 @@
-# 👨🏻‍💻 Jhonatas Araujo
+# 🍔 Burger House
 
-**`Desenvolvedor FullStack`**
+Sistema web de pedidos para hamburgueria, com cardápio dinâmico, carrinho de compras, painel administrativo e pagamento integrado.
 
-Apaixonado por tecnologia e desenvolvimento de sistemas web completos — do banco de dados à interface. Construo aplicações reais, com foco em soluções práticas para negócios, como sistemas de pedidos, pagamentos e painéis administrativos.
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
+![EJS](https://img.shields.io/badge/EJS-A91E50?style=flat&logo=ejs&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-<p align="left">
-    <a href="https://github.com/1jhonatasss?tab=followers">
-        <img 
-            alt="Seguidores" 
-            title="Me siga no GitHub" 
-            src="https://custom-icon-badges.demolab.com/github/followers/1jhonatasss?color=236ad3&labelColor=1155ba&style=for-the-badge&logo=github&label=Seguidores&logoColor=white"
-        />
-    </a>
-    <a href="https://github.com/1jhonatasss?tab=repositories&sort=stargazers">
-        <img 
-            alt="Total de estrelas" 
-            title="Total de estrelas GitHub" 
-            src="https://custom-icon-badges.demolab.com/github/stars/1jhonatasss?color=55960c&style=for-the-badge&labelColor=488207&logo=star&label=estrelas"
-        />
-    </a>
-    <a href="https://www.instagram.com/SEU_USUARIO_AQUI/">
-        <img 
-            alt="Instagram" 
-            title="Me siga no Instagram" 
-            src="https://custom-icon-badges.demolab.com/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white"
-        />
-    </a>
-</p>
+## Sobre o projeto
 
----
+O Burger House é um sistema completo de pedidos online, pensado para o dia a dia de uma hamburgueria: o cliente monta o pedido pelo cardápio, personaliza ingredientes, paga direto pelo site e o pedido chega em tempo real no painel administrativo.
 
-### 🤖 Linguagens e Tecnologias
+## Funcionalidades
 
-<img 
-    align="left" 
-    alt="HTML"
-    title="HTML" 
-    width="30px" 
-    style="padding-right: 10px;" 
-    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" 
-/>
-<img 
-    align="left" 
-    alt="CSS" 
-    title="CSS"
-    width="30px" 
-    style="padding-right: 10px;" 
-    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" 
-/>
-<img 
-    align="left" 
-    alt="JavaScript" 
-    title="JavaScript"
-    width="30px" 
-    style="padding-right: 10px;" 
-    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" 
-/>
-<img 
-    align="left" 
-    alt="Node.js" 
-    title="Node.js"
-    width="30px" 
-    style="padding-right: 10px;" 
-    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" 
-/>
-<img 
-    align="left" 
-    alt="Express" 
-    title="Express"
-    width="30px" 
-    style="padding-right: 10px;" 
-    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg" 
-/>
-<img 
-    align="left" 
-    alt="MySQL" 
-    title="MySQL"
-    width="30px" 
-    style="padding-right: 10px;" 
-    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" 
-/>
-<img 
-    align="left" 
-    alt="Git" 
-    title="Git"
-    width="30px" 
-    style="padding-right: 10px;" 
-    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" 
-/>
-
-<br/>
-<br/>
-
----
-
-### 🍔 Projetos em Destaque
-
-#### Burger House
-Sistema web completo de pedidos para hamburgueria, com cardápio dinâmico, carrinho de compras, personalização de produtos, pagamento integrado e painel administrativo.
-
-**Tecnologias:** Node.js · Express · MySQL · EJS · WebSocket · PWA
-
-**Funcionalidades:**
-- 🛒 Cardápio dinâmico com categorias e personalização de ingredientes
+- 🍔 Cardápio dinâmico com categorias e personalização de ingredientes
+- 🛒 Carrinho de compras
 - 💳 Pagamento via Mercado Pago (Pix e cartão)
-- 📊 Painel administrativo (produtos, pedidos, banners promocionais)
+- 📊 Painel administrativo — produtos, pedidos e banners promocionais
 - 🔄 Atualização de pedidos em tempo real via WebSocket
 - 📱 PWA — instalável e funciona offline
 
-[🔗 Ver repositório](https://github.com/1jhonatasss/burger-house)
+## Tecnologias
 
----
+| Camada | Tecnologia |
+|---|---|
+| Backend | Node.js, Express |
+| Views | EJS |
+| Banco de dados | MySQL |
+| Pagamento | Mercado Pago SDK |
+| Tempo real | WebSocket |
+| Offline / instalável | PWA (Service Worker) |
 
-### 📊 Estatísticas
+## Pré-requisitos
 
-<p>
-  <img 
-    align="left" 
-    alt="GitHub Stats" 
-    height="200" 
-    style="padding-right: 10px;" 
-    src="https://github-readme-stats.vercel.app/api?username=1jhonatasss&show_icons=true&theme=tokyonight&include_all_commits=true&locale=pt-br" 
-  />
+- Node.js 18 ou superior
+- Um banco de dados MySQL acessível
+- Conta no Mercado Pago (para gerar as chaves de pagamento)
 
-<img 
-      align="left" 
-      alt="GitHub Stats" 
-      height="200" 
-      src="https://github-readme-stats.vercel.app/api/top-langs/?username=1jhonatasss&theme=tokyonight&layout=compact&custom_title=Tecnologias&langs_count=9" 
-  />
+## Como rodar
 
-</p>
+```bash
+# Clonar o repositório
+git clone https://github.com/1jhonatasss/burger-house.git
+cd burger-house
+
+# Instalar dependências
+npm install
+
+# Configurar variáveis de ambiente
+cp .env.example .env
+# preencha as variáveis do .env com seus dados de banco e Mercado Pago
+
+# Rodar em modo desenvolvimento (reinicia automaticamente)
+npm run dev
+
+# Ou rodar em modo produção
+npm start
+```
+
+O projeto sobe por padrão em `http://localhost:3000`.
+
+## Estrutura do projeto
+
+```
+controllers/   lógica das rotas
+models/        modelos de dados
+routes/        definição de rotas
+views/         páginas EJS
+public/        assets estáticos (css, js, imagens)
+services/      integrações externas (pagamento)
+utils/         utilitários (banco, cache, websocket)
+```
+
+## Licença
+
+Este projeto está sob a licença MIT — veja o arquivo [LICENSE](./LICENSE) para mais detalhes.
+
+## Autor
+
+Desenvolvido por **Jhonatas Araujo**
+[GitHub](https://github.com/1jhonatasss)
