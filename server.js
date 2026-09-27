@@ -124,14 +124,20 @@ app.get('/', (req, res) => {
 
 // ✅ INICIAR SERVIDOR
 const PORT = parseInt(process.env.PORT || 3000, 10);
+
+// Só roda servidor local fora da Vercel
 if (!process.env.VERCEL) {
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`🍔 Servidor rodando na porta ${PORT}`);
   });
-} 
-
-
-const WebSocketManager = require('./utils/WebSocketManager');
-WebSocketManager.init(server);
+  
+  // WebSocket só funciona localmente
+  try {
+    const WebSocketManager = require('./utils/WebSocketManager');
+    WebSocketManager.init(server);
+  } catch (err) {
+    console.warn('WebSocket não iniciado:', err.message);
+  }
+}
 
 module.exports = app;
