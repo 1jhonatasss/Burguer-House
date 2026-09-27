@@ -71,16 +71,34 @@ const produtosModelMock = produtosMock.map(p => ({
   produtoDisponivel: p.disponivel ? 1 : 0
 }));
 
-const bannersMock = [];
+const bannersMock = [
+  {
+    bannerId: 1,
+    titulo: "Combo Duplo em Oferta",
+    imagemUrl: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=1200",
+    precoOriginal: 39.90,
+    precoPromocional: 29.90,
+    ativo: 1
+  },
+  {
+    bannerId: 2,
+    titulo: "X-Bacon Especial",
+    imagemUrl: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=1200",
+    precoOriginal: 32.90,
+    precoPromocional: 24.90,
+    ativo: 1
+  }
+];
 
 const cardapioController = {
   // ✅ CARDÁPIO PRINCIPAL
   async cardapioView(req, res) {
     try {
       const agora = Date.now();
-      const cacheValido = cacheCardapio && agora - cacheTimestamp < 60000;
+      // ✅ Ignora cache no serverless da Vercel (instância nova a cada request)
+      const cacheValido = false;
 
-      if (cacheValido) {
+      if (cacheValido && cacheCardapio) {
         console.log("⚡ Servindo /cardapio via cache");
         return res.render("cardapio", {
           ...cacheCardapio,
@@ -129,6 +147,12 @@ const cardapioController = {
       }
 
       const produtosComIngredientes = Array.from(produtosMap.values());
+
+      // ✅ Se não veio nada do banco, força o fallback
+      if (produtosComIngredientes.length === 0) {
+        throw new Error("Banco retornou vazio — usando mock");
+      }
+
       const categoria = req.query.categoria || "todos";
       const produtosFiltrados =
         categoria === "todos"
