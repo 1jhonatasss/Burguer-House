@@ -43,14 +43,98 @@
             display: none;
         }
 
-        @media (max-width: 768px) {
-            .mobile-version {
-                display: block;
-            }
-            .desktop-version {
-                display: none;
-            }
+@media (max-width: 768px) {
+    .mobile-version {
+        display: block;
+    }
+    .desktop-version {
+        display: none;
+    }
+    
+    /* Compacta tudo para caber em iPhone 11 e menores */
+    .mobile-version .container {
+        padding-top: calc(1.5rem + env(safe-area-inset-top));
+        padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+        justify-content: center;
+        min-height: 100vh;
+        min-height: 100dvh;
+    }
+    
+    /* Em telas BAIXAS (menos de 750px de altura), encolhe mais */
+    @media (max-height: 750px) {
+        .mobile-version .container {
+            padding-top: calc(1rem + env(safe-area-inset-top));
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+            justify-content: flex-start;
         }
+    }
+    
+    .mobile-version .badge {
+        margin-bottom: 0.75rem;
+        padding: 0.35rem 0.85rem;
+    }
+    
+    .mobile-version .badge span {
+        font-size: 0.7rem;
+    }
+    
+    .mobile-version .logo {
+        margin-bottom: 0.5rem;
+    }
+    
+    .mobile-version .logo-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .mobile-version .logo h1 {
+        font-size: 2.5rem;
+    }
+    
+    .mobile-version .logo h2 {
+        font-size: 1.1rem;
+        letter-spacing: 0.35em;
+        margin-top: 0.25rem;
+    }
+    
+    .mobile-version .description {
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: 1.25rem;
+        padding: 0 0.25rem;
+    }
+    
+    .mobile-version .cta-wrapper {
+        margin-bottom: 1.25rem;
+    }
+    
+    .mobile-version .cta-button {
+        padding: 0.85rem 1.75rem;
+        font-size: 0.9rem;
+    }
+    
+    .mobile-version .cta-button i {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .mobile-version .features {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .mobile-version .feature {
+        font-size: 0.7rem;
+    }
+    
+    .mobile-version .feature i {
+        width: 13px;
+        height: 13px;
+    }
+}
 
         .mobile-version .container {
             position: relative;
