@@ -1,7 +1,7 @@
 const ProdutoModel = require("../models/Produto");
 const IngredienteModel = require("../models/Ingrediente");
 const ProdutoIngredienteModel = require("../models/ProdutoIngrediente");
-const CacheManager = require("../utils/CacheManager");
+const CacheManager = require('../utils/cacheManager');
 const fs = require('fs');
 const path = require('path');
 
