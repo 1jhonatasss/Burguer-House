@@ -625,3 +625,122 @@ body::after {
 .status-icon { width: 70px; height: 70px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 .status-icon.sucesso { background: rgba(16, 185, 129, 0.2); color: var(--primary-green); }
 .status-icon.erro { background: rgba(220, 38, 38, 0.2); color: var(--primary-red); }
+
+/* ============================================
+   🔧 HEADER - ALINHAMENTO MOBILE
+   Logo centralizado, seta na esquerda, entrega/horário na direita
+   ============================================ */
+
+@media (max-width: 768px) {
+    .header-container {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        padding-top: calc(0.75rem + env(safe-area-inset-top));
+    }
+
+    .header-logo {
+        grid-column: 2;
+        grid-row: 1;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+
+    .logo-text h1 {
+        font-size: 1.15rem;
+        line-height: 1.1;
+        white-space: nowrap;
+    }
+
+    .logo-text p {
+        font-size: 0.65rem;
+        white-space: nowrap;
+    }
+
+    .btn-voltar {
+        grid-column: 1;
+        grid-row: 1;
+        padding: 0.5rem 0.75rem;
+        font-size: 0;
+        gap: 0;
+        justify-self: start;
+    }
+
+    .btn-voltar i {
+        width: 18px;
+        height: 18px;
+    }
+
+    .btn-voltar span {
+        display: none;
+    }
+
+    .header-entrega-info {
+        grid-column: 3;
+        grid-row: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        justify-self: end;
+    }
+
+    .btn-entrega-tipo {
+        padding: 0.5rem 0.65rem;
+        font-size: 0.75rem;
+        gap: 0.35rem;
+    }
+
+    .btn-entrega-tipo i {
+        width: 16px;
+        height: 16px;
+    }
+
+    .btn-entrega-tipo span {
+        display: none;
+    }
+
+    .header-horario {
+        padding: 0.4rem 0.65rem;
+    }
+
+    .horario-label {
+        font-size: 0.65rem;
+    }
+
+    .horario-tempo {
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
+}
+
+/* iPhone SE e telas muito pequenas - reduz ainda mais */
+@media (max-width: 375px) {
+    .logo-text h1 {
+        font-size: 1rem;
+    }
+
+    .logo-text p {
+        font-size: 0.6rem;
+    }
+
+    .btn-voltar {
+        padding: 0.4rem 0.6rem;
+    }
+
+    .btn-entrega-tipo {
+        padding: 0.4rem 0.55rem;
+    }
+
+    .header-horario {
+        padding: 0.35rem 0.55rem;
+    }
+
+    .horario-tempo {
+        font-size: 0.65rem;
+    }
+}
