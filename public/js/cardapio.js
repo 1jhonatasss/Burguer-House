@@ -539,7 +539,7 @@ function atualizarConteudoCarrinhoHorizontal(carrinho) {
                                 `<span class="mod-tag rem"><strong class="mod-icon mod-icon-rem">−</strong> ${removidosTexto}</span>` 
                                 : ''}
                             ${observacao ? 
-                                `<span class="mod-tag obs" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid #fbbf24; padding: 0.3rem 0.6rem; border-radius: 6px; margin-top: 0.4rem; display: block; font-size: 0.75rem;">📝 ${observacao}</span>` 
+                                `<span class="mod-tag obs" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid #fbbf24; padding: 0.3rem 0.6rem; border-radius: 6px; margin-top: 0.4rem; display: block; font-size: 0.75rem;"> ${observacao}</span>` 
                                 : ''}
                         </div>
                     ` : ''}

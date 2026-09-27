@@ -45,16 +45,10 @@
 
             <!-- Entrega e Horário -->
             <div class="header-entrega-info">
-                <button class="btn-entrega-tipo" id="btnEntregaTipo">
-                    <i data-lucide="bike"></i>
-                    <span>Entrega</span>
-                    <i data-lucide="chevron-down" class="chevron-icon"></i>
-                </button>
-                
                 <div class="header-horario">
-                    <span class="horario-label">Hoje</span>
-                    <span class="horario-tempo">30 - 50 min</span>
-                </div>
+    <span class="horario-label" id="horarioLabel">Hoje</span>
+    <span class="horario-tempo" id="horarioTempo">30 - 50 min</span>
+</div>
             </div>
         </div>
     </header>
@@ -143,78 +137,82 @@
 
     <script src="/js/carrinho-local.js"></script>
 <script src="/js/cardapio.js"></script>
-    <script>
-        // Inicializa ícones Lucide
-        lucide.createIcons();
-        
-        // Carrinho global
-        const carrinhoGlobal = <%- JSON.stringify(carrinho) %>;
-        
-        // ============================================
-        // MODAL TIPO DE ENTREGA
-        // ============================================
-        const btnEntregaTipo = document.getElementById('btnEntregaTipo');
-        const modalEntregaTipo = document.getElementById('modalEntregaTipo');
-        const modalEntregaClose = document.getElementById('modalEntregaClose');
-        const btnConfirmarEntrega = document.getElementById('btnConfirmarEntrega');
-        
-        // Abrir modal
-        if (btnEntregaTipo) {
-            btnEntregaTipo.addEventListener('click', () => {
-                modalEntregaTipo.classList.add('active');
-                lucide.createIcons();
-            });
+<script>
+    // Inicializa ícones Lucide
+    lucide.createIcons();
+    
+    // Carrinho global
+    const carrinhoGlobal = <%- JSON.stringify(carrinho) %>;
+    
+    // ============================================
+    // MODAL TIPO DE ENTREGA
+    // ============================================
+    const modalEntregaTipo = document.getElementById('modalEntregaTipo');
+    const modalEntregaClose = document.getElementById('modalEntregaClose');
+    const btnConfirmarEntrega = document.getElementById('btnConfirmarEntrega');
+
+    // Função pra atualizar o tempo com texto humano
+    function atualizarTempoPorTipo(tipo) {
+        const horarioTempo = document.getElementById('horarioTempo');
+        const horarioLabel = document.getElementById('horarioLabel');
+
+        if (tipo === 'entrega') {
+            if (horarioLabel) horarioLabel.textContent = 'Entrega em';
+            if (horarioTempo) horarioTempo.textContent = '30 - 50 min';
+        } else {
+            if (horarioLabel) horarioLabel.textContent = 'Pronto em';
+            if (horarioTempo) horarioTempo.textContent = '15 - 25 min';
         }
-        
-        // Fechar modal (X)
-        if (modalEntregaClose) {
-            modalEntregaClose.addEventListener('click', () => {
-                modalEntregaTipo.classList.remove('active');
-            });
-        }
-        
-        // Fechar modal (clique fora)
-        if (modalEntregaTipo) {
-            modalEntregaTipo.addEventListener('click', (e) => {
-                if (e.target === modalEntregaTipo) {
-                    modalEntregaTipo.classList.remove('active');
-                }
-            });
-        }
-        
-        // Confirmar entrega
-        if (btnConfirmarEntrega) {
-            btnConfirmarEntrega.addEventListener('click', () => {
-                const tipoSelecionado = document.querySelector('input[name="tipoEntrega"]:checked').value;
-                const btnTexto = btnEntregaTipo.querySelector('span');
-                
-                if (tipoSelecionado === 'entrega') {
-                    btnTexto.textContent = 'Entrega';
-                } else {
-                    btnTexto.textContent = 'Retirada';
-                }
-                
-                // Salvar no localStorage para usar depois
-                localStorage.setItem('tipoEntrega', tipoSelecionado);
-                
-                modalEntregaTipo.classList.remove('active');
-                
-                if (typeof mostrarNotificacao === 'function') {
-                    mostrarNotificacao(`Tipo de pedido: ${tipoSelecionado === 'entrega' ? 'Entrega' : 'Retirada'}`, 'sucesso');
-                }
-            });
-        }
-        
-        // Carregar tipo salvo
-        const tipoSalvo = localStorage.getItem('tipoEntrega');
-        if (tipoSalvo && btnEntregaTipo) {
-            const btnTexto = btnEntregaTipo.querySelector('span');
-            btnTexto.textContent = tipoSalvo === 'entrega' ? 'Entrega' : 'Retirada';
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    // Confirmar entrega
+    if (btnConfirmarEntrega) {
+        btnConfirmarEntrega.addEventListener('click', () => {
+            const tipoSelecionado = document.querySelector('input[name="tipoEntrega"]:checked').value;
             
-            const radioSalvo = document.querySelector(`input[name="tipoEntrega"][value="${tipoSalvo}"]`);
-            if (radioSalvo) radioSalvo.checked = true;
-        }
-    </script>
+            atualizarTempoPorTipo(tipoSelecionado);
+            
+            localStorage.setItem('tipoEntrega', tipoSelecionado);
+            
+            modalEntregaTipo.classList.remove('active');
+            
+            if (typeof mostrarNotificacao === 'function') {
+                mostrarNotificacao(
+                    tipoSelecionado === 'entrega' 
+                        ? '🛵 Vamos levar até você em 30 - 50 min!' 
+                        : '🛍️ Você pode retirar em 15 - 25 min!', 
+                    'sucesso'
+                );
+            }
+        });
+    }
+
+    // Fechar modal (X)
+    if (modalEntregaClose) {
+        modalEntregaClose.addEventListener('click', () => {
+            modalEntregaTipo.classList.remove('active');
+        });
+    }
+
+    // Fechar modal (clique fora)
+    if (modalEntregaTipo) {
+        modalEntregaTipo.addEventListener('click', (e) => {
+            if (e.target === modalEntregaTipo) {
+                modalEntregaTipo.classList.remove('active');
+            }
+        });
+    }
+
+    // Carregar tipo salvo (aplica tempo/texto corretos)
+    const tipoSalvo = localStorage.getItem('tipoEntrega');
+    if (tipoSalvo) {
+        atualizarTempoPorTipo(tipoSalvo);
+        const radioSalvo = document.querySelector(`input[name="tipoEntrega"][value="${tipoSalvo}"]`);
+        if (radioSalvo) radioSalvo.checked = true;
+    }
+</script>
     
     <style>
     /* ============================================
