@@ -53,15 +53,22 @@ body {
     }
     
     /* Compacta tudo para caber em iPhone 11 e menores */
-    .mobile-version .container {
-        padding-top: calc(1.5rem + env(safe-area-inset-top));
-        padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
-        padding-left: 1.25rem;
-        padding-right: 1.25rem;
-        justify-content: center;
-        min-height: 100vh;
-        min-height: 100dvh;
-    }
+.mobile-version .container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: hidden;
+    background: #0a0a0a;
+    padding-top: calc(2rem + env(safe-area-inset-top));
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
     
     /* Em telas BAIXAS (menos de 750px de altura), encolhe mais */
     @media (max-height: 750px) {
