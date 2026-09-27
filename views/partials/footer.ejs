@@ -1,0 +1,10 @@
+<script>
+// ✅ FORÇAR ATUALIZAÇÃO PERIÓDICA DO CARRINHO
+setInterval(() => {
+  if (window.carrinhoGlobal && window.carrinhoGlobal.length > 0) {
+    console.log('🔄 Atualizando estado do carrinho...');
+    // Dispara um evento customizado para atualizar a UI
+    window.dispatchEvent(new CustomEvent('carrinhoAtualizado'));
+  }
+}, 30000); // A cada 30 segundos
+</script>

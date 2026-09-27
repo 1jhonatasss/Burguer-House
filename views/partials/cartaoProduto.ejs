@@ -1,0 +1,50 @@
+<% if (produto) { %>
+    <% 
+    const preco = Number(produto.preco) || 0;
+    const precoPromocional = Number(produto.preco_promocional) || preco;
+    const emPromocao = produto.em_promocao && precoPromocional < preco;
+    const precoFinal = emPromocao ? precoPromocional : preco;
+    const nome = produto.nome || 'Produto';
+    const descricao = produto.descricao || 'Descrição do produto';
+    const id = produto.id || 0;
+    const disponivel = produto.disponivel !== false;
+    const imagemUrl = produto.imagem_url || '/images/default.jpg';
+    const categoria = produto.categoria || 'geral';
+    %>
+
+    <!-- ✅ CARD INTEIRO CLICÁVEL -->
+    <div class="produto-card" 
+         data-categoria="<%= categoria %>" 
+         data-produto-id="<%= id %>"
+         onclick="handleProdutoClick(<%= id %>, '<%= categoria %>', <%= emPromocao ? 'true' : 'false' %>, this, event)"
+         style="cursor: pointer;">
+
+        <div class="produto-imagem">
+            <img src="<%= imagemUrl %>" alt="<%= nome %>">
+            <% if (emPromocao) { %>
+                <div class="promocao-tag">PROMOÇÃO</div>
+            <% } %>
+            <% if (!disponivel) { %>
+                <div class="indisponivel-tag">INDISPONÍVEL</div>
+            <% } %>
+        </div>
+
+        <div class="produto-info">
+            <h3 class="produto-nome"><%= nome %></h3>
+            <p class="produto-descricao"><%= descricao %></p>
+
+            <div class="produto-preco">
+                <% if (emPromocao) { %>
+                    <span class="preco-original">R$ <%= preco.toFixed(2) %></span>
+                <% } %>
+                <span class="preco-atual">R$ <%= precoFinal.toFixed(2) %></span>
+            </div>
+        </div>
+
+        <div class="feedback-adicionado">
+            <span>✔ Item adicionado</span>
+            <button class="btn-excluir" onclick="event.stopPropagation()">Excluir</button>
+            <div class="feedback-bar"></div>
+        </div>
+    </div>
+<% } %>

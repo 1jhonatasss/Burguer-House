@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= produto ? 'Editar' : 'Cadastrar' %> Produto - Admin</title>
+    <link rel="stylesheet" href="/css/admin-mobile.css">
+    <link rel="stylesheet" href="/css/cardapio.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        :root {
+            --primary-red: #dc2626;
+            --primary-orange: #ea580c;
+            --primary-yellow: #f59e0b;
+            --gray-900: #111827;
+            --gray-800: #1f2937;
+            --gray-700: #374151;
+            --gray-600: #4b5563;
+            --gray-500: #6b7280;
+            --gray-400: #9ca3af;
+            --gray-300: #d1d5db;
+            --gray-200: #e5e7eb;
+            --gray-100: #f3f4f6;
+            --white: #ffffff;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            background: var(--gray-900);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .admin-sidebar {
+            width: 280px;
+            background: var(--gray-800);
+            border-right: 1px solid var(--gray-700);
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-700);
+        }
+
+        .admin-logo h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-yellow), var(--primary-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            color: var(--gray-300);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .admin-nav-link:hover,
+        .admin-nav-link.active {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-orange));
+            color: white;
+        }
+
+        .admin-main {
+            flex: 1;
+            padding: 2rem;
+            margin-left: 280px;
+            overflow-y: auto;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-700);
+        }
+
+        .admin-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .form-container {
+            background: var(--gray-800);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid var(--gray-700);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            color: var(--gray-300);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-700);
+            border-radius: 0.5rem;
+            color: white;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-red);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group input {
+            width: auto;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #10b981, #047857);
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel {
+            background: var(--gray-600);
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #047857, #065f46);
+        }
+
+        .btn-cancel:hover {
+            background: var(--gray-500);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .notificacao {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            color: white;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .notificacao.sucesso {
+            background: linear-gradient(135deg, #10b981, #047857);
+            border: 1px solid #10b981;
+        }
+
+        .notificacao.erro {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            border: 1px solid #ef4444;
+        }
+
+        /* Estilos para preview de imagem */
+        .image-upload-area {
+            border: 2px dashed var(--gray-700);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            background: var(--gray-900);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .image-upload-area:hover {
+            border-color: var(--primary-yellow);
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .image-upload-area.has-image {
+            border-style: solid;
+            border-color: var(--primary-yellow);
+        }
+
+        #preview-container {
+            margin-top: 1rem;
+        }
+
+        #preview-img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 0.75rem;
+            border: 2px solid var(--gray-700);
+            object-fit: cover;
+        }
+
+        .upload-icon {
+            color: var(--gray-500);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-text {
+            color: var(--gray-400);
+            font-size: 0.875rem;
+        }
+
+        /* Estilos para a seção de ingredientes */
+        .ingredientes-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--gray-700);
+            border-radius: 0.75rem;
+            border: 1px solid var(--gray-600);
+        }
+
+        .ingredientes-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-yellow);
+            font-weight: 700;
+        }
+
+        .ingredientes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: var(--gray-800);
+            border-radius: 0.5rem;
+        }
+
+        .ingrediente-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--gray-900);
+            border: 2px solid var(--gray-700);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ingrediente-item:hover {
+            border-color: var(--gray-500);
+        }
+
+        .ingrediente-item.selecionado {
+            border-color: var(--primary-yellow);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .ingrediente-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--gray-600);
+            border-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .ingrediente-item.selecionado .ingrediente-checkbox {
+            background: var(--primary-yellow);
+            border-color: var(--primary-yellow);
+        }
+
+        .ingrediente-item.selecionado .ingrediente-checkbox::after {
+            content: '✓';
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .ingrediente-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ingrediente-nome {
+            font-weight: 600;
+            color: white;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .ingrediente-detalhes {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--gray-400);
+        }
+
+        .ingrediente-categoria {
+            text-transform: capitalize;
+        }
+
+        .ingrediente-preco {
+            color: var(--primary-yellow);
+            font-weight: 600;
+        }
+
+        .ingredientes-selecionados {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--gray-800);
+            border-radius: 0.5rem;
+            border: 1px solid var(--gray-700);
+        }
+
+        .selecionados-header {
+            font-weight: 600;
+            color: var(--gray-300);
+            margin-bottom: 0.5rem;
+        }
+
+        .selecionados-lista {
+            font-size: 0.875rem;
+            color: var(--gray-400);
+        }
+
+        .nenhum-ingrediente {
+            text-align: center;
+            color: var(--gray-500);
+            padding: 2rem;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+
+            .ingredientes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-sidebar">
+            <div class="admin-logo">
+                <i data-lucide="shield"></i>
+                <h1>Admin Burger</h1>
+            </div>
+
+            <nav class="admin-nav">
+                <a href="/admin" class="admin-nav-link">
+                    <i data-lucide="layout-dashboard"></i>
+                    Dashboard
+                </a>
+                <a href="/admin/pedidos" class="admin-nav-link">
+                    <i data-lucide="clipboard-list"></i>
+                    Pedidos Finalizados
+                </a>
+                <a href="/admin/produtos" class="admin-nav-link active">
+                    <i data-lucide="package"></i>
+                    Produtos • Banners
+                </a>
+                <a href="/cardapio" class="admin-nav-link">
+                    <i data-lucide="store"></i>
+                    Voltar ao Cardápio
+                </a>
+            </nav>
+        </div>
+
+        <div class="admin-main">
+            <div class="admin-header">
+                <h1><%= produto ? 'Editar Produto' : 'Cadastrar Novo Produto' %></h1>
+            </div>
+            
+            <div id="notificacao" class="notificacao" style="display: none;"></div>
+
+            <div class="form-container">
+                <form id="formProduto" action="<%= produto ? '/admin/produtos/atualizar' : '/admin/produtos/cadastrar' %>" method="POST">
+                    <% if (produto) { %>
+                        <input type="hidden" name="id" value="<%= produto.produtoId %>">
+                    <% } %>
+                    
+                    <div class="form-group">
+                        <label for="nome">Nome do Produto *</label>
+                        <input type="text" id="nome" name="nome" value="<%= produto ? produto.produtoNome : '' %>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descricao">Descrição</label>
+                        <textarea id="descricao" name="descricao" rows="3"><%= produto ? produto.produtoDescricao : '' %></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="preco">Preço *</label>
+                        <input type="number" id="preco" name="preco" step="0.01" min="0" value="<%= produto ? produto.produtoPreco : '' %>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categoria">Categoria *</label>
+                        <select id="categoria" name="categoria" required>
+                            <option value="">Selecione uma categoria</option>
+                            <option value="hamburguer" <%= produto && produto.produtoCategoria === 'hamburguer' ? 'selected' : '' %>>Hamburguer</option>
+                            <option value="bebida" <%= produto && produto.produtoCategoria === 'bebida' ? 'selected' : '' %>>Bebida</option>
+                            <option value="acompanhamento" <%= produto && produto.produtoCategoria === 'acompanhamento' ? 'selected' : '' %>>Acompanhamento</option>
+                            <option value="combo" <%= produto && produto.produtoCategoria === 'combo' ? 'selected' : '' %>>Combo</option>
+                        </select>
+                    </div>
+
+                    <!-- SEÇÃO DE IMAGEM CORRIGIDA -->
+                    <div class="form-group">
+                        <label>Imagem do Produto *</label>
+                        
+                        <div class="image-upload-area <%= produto && produto.produtoImagem ? 'has-image' : '' %>" onclick="document.getElementById('imagemFile').click()">
+                            <div id="upload-placeholder" style="<%= produto && produto.produtoImagem ? 'display:none;' : '' %>">
+                                <div class="upload-icon">
+                                    <i data-lucide="image" style="width: 48px; height: 48px;"></i>
+                                </div>
+                                <p class="upload-text">Clique aqui para selecionar uma imagem</p>
+                                <p class="upload-text" style="font-size: 0.75rem;">PNG, JPG ou WEBP (máx. 5MB)</p>
+                            </div>
+                            
+                            <div id="preview-container" style="<%= produto && produto.produtoImagemUrl ? '' : 'display:none;' %>">
+                            <img id="preview-img" src="<%= produto && produto.produtoImagemUrl ? produto.produtoImagemUrl : '' %>" alt="Preview">
+                        </div>
+                        </div>
+                        
+                        <input type="file" id="imagemFile" accept="image/*" style="display: none;" onchange="previewImagem(event)">
+                        <input type="hidden" name="imagem" id="imagemBase64" value="<%= produto && produto.produtoImagemUrl ? produto.produtoImagemUrl : '' %>">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="emPromocao" name="emPromocao" <%= produto && produto.produtoEmPromocao === 1 ? 'checked' : '' %>>
+                        <label for="emPromocao">Produto em Promoção</label>
+                    </div>
+
+                    <div class="form-group" id="precoPromocionalGroup" style="<%= produto && produto.produtoEmPromocao === 1 ? '' : 'display: none;' %>">
+                        <label for="precoPromocional">Preço Promocional</label>
+                        <input type="number" id="precoPromocional" name="precoPromocional" step="0.01" min="0" value="<%= produto ? produto.produtoPrecoPromocional : '' %>">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="disponivel" name="disponivel" <%= !produto || produto.produtoDisponivel === 1 ? 'checked' : '' %>>
+                        <label for="disponivel">Produto Disponível</label>
+                    </div>
+
+                    <!-- SEÇÃO DE INGREDIENTES ADICIONAIS -->
+                    <div class="ingredientes-section" id="ingredientesSection">
+                        <div class="ingredientes-header">
+                            <i data-lucide="plus-circle"></i>
+                            <span>Ingredientes Adicionais para Personalização</span>
+                        </div>
+                        
+                        <p style="color: var(--gray-400); font-size: 0.875rem; margin-bottom: 1rem;">
+                            Selecione os ingredientes que estarão disponíveis para adicionar quando o cliente personalizar este produto.
+                        </p>
+
+                        <div class="ingredientes-grid" id="ingredientesGrid">
+                            <% if (ingredientes && ingredientes.length > 0) { %>
+                                <% ingredientes.forEach(ing => { %>
+                                    <div class="ingrediente-item <%= ingredientesSelecionados && ingredientesSelecionados.some(si => si.ingredienteId == ing.ingId) ? 'selecionado' : '' %>" 
+                                         data-ingrediente-id="<%= ing.ingId %>">
+                                        <div class="ingrediente-checkbox"></div>
+                                        <div class="ingrediente-info">
+                                            <div class="ingrediente-nome"><%= ing.ingNome %></div>
+                                            <div class="ingrediente-detalhes">
+                                                <span class="ingrediente-categoria"><%= ing.ingCategoria %></span>
+                                                <span class="ingrediente-preco">+ R$ <%= parseFloat(ing.ingPrecoAdicional || 0).toFixed(2) %></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                            <% } else { %>
+                                <div class="nenhum-ingrediente">
+                                    <i data-lucide="package-x"></i>
+                                    <p>Nenhum ingrediente disponível</p>
+                                </div>
+                            <% } %>
+                        </div>
+
+                        <div class="ingredientes-selecionados">
+                            <div class="selecionados-header">Ingredientes Selecionados:</div>
+                            <div class="selecionados-lista" id="selecionadosLista">
+                                <% if (ingredientesSelecionados && ingredientesSelecionados.length > 0) { %>
+                                    <%= ingredientesSelecionados.map(si => si.nome).join(', ') %>
+                                <% } else { %>
+                                    Nenhum ingrediente selecionado
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <!-- Campo hidden para enviar os ingredientes selecionados -->
+                        <input type="hidden" name="ingredientes" id="ingredientesSelecionados" value="<%= ingredientesSelecionados ? ingredientesSelecionados.map(si => si.ingredienteId).join(',') : '' %>">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">
+                            <%= produto ? 'Atualizar Produto' : 'Cadastrar Produto' %>
+                        </button>
+                        <a href="/admin/produtos" class="btn-cancel">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+
+            // Mostrar/ocultar campo de preço promocional
+            const emPromocaoCheckbox = document.getElementById('emPromocao');
+            const precoPromocionalGroup = document.getElementById('precoPromocionalGroup');
+
+            emPromocaoCheckbox.addEventListener('change', function() {
+                precoPromocionalGroup.style.display = this.checked ? 'block' : 'none';
+            });
+
+            // Controlar visibilidade da seção de ingredientes
+            const selectCategoria = document.getElementById('categoria');
+            const ingredientesSection = document.getElementById('ingredientesSection');
+
+            function atualizarVisibilidadeIngredientes() {
+                const categoriaSelecionada = selectCategoria.value.toLowerCase();
+                ingredientesSection.style.display = categoriaSelecionada === 'hamburguer' ? 'block' : 'none';
+            }
+
+            atualizarVisibilidadeIngredientes();
+            selectCategoria.addEventListener('change', atualizarVisibilidadeIngredientes);
+
+            // Gerenciar seleção de ingredientes
+            const ingredientesSelecionados = new Set(<%= ingredientesSelecionados ? JSON.stringify(ingredientesSelecionados.map(si => si.ingredienteId)) : '[]' %>);
+            const ingredientesSelecionadosInput = document.getElementById('ingredientesSelecionados');
+            const selecionadosLista = document.getElementById('selecionadosLista');
+
+            function atualizarIngredientesSelecionados() {
+                ingredientesSelecionadosInput.value = Array.from(ingredientesSelecionados).join(',');
+                
+                const ingredientesNomes = Array.from(document.querySelectorAll('.ingrediente-item.selecionado'))
+                    .map(item => {
+                        const nomeElement = item.querySelector('.ingrediente-nome');
+                        return nomeElement ? nomeElement.textContent : '';
+                    })
+                    .filter(nome => nome !== '');
+                
+                selecionadosLista.textContent = ingredientesNomes.length > 0 ? 
+                    ingredientesNomes.join(', ') : 'Nenhum ingrediente selecionado';
+            }
+
+            document.querySelectorAll('.ingrediente-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const ingredienteId = this.getAttribute('data-ingrediente-id');
+                    
+                    if (ingredientesSelecionados.has(ingredienteId)) {
+                        ingredientesSelecionados.delete(ingredienteId);
+                        this.classList.remove('selecionado');
+                    } else {
+                        ingredientesSelecionados.add(ingredienteId);
+                        this.classList.add('selecionado');
+                    }
+                    
+                    atualizarIngredientesSelecionados();
+                });
+            });
+
+            // Form submission
+            const form = document.getElementById('formProduto');
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Validar imagem
+                const imagemBase64 = document.getElementById('imagemBase64').value;
+                if (!imagemBase64 || imagemBase64.trim() === '') {
+                    mostrarNotificacao('Por favor, selecione uma imagem para o produto', 'erro');
+                    return;
+                }
+                
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Garantir que a imagem está incluída
+                data.imagem = imagemBase64;
+                
+                // Adicionar ingredientes selecionados
+                data.ingredientes = Array.from(ingredientesSelecionados);
+                
+                console.log('Enviando dados:', data); // Debug
+                
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    const resultado = await response.json();
+                    
+                    if (resultado.ok) {
+                        mostrarNotificacao(resultado.msg, 'sucesso');
+                        setTimeout(() => {
+                            window.location.href = '/admin/produtos';
+                        }, 1500);
+                    } else {
+                        mostrarNotificacao(resultado.msg, 'erro');
+                    }
+                } catch (error) {
+                    console.error('Erro ao salvar produto:', error);
+                    mostrarNotificacao('Erro de conexão ao salvar produto', 'erro');
+                }
+            });
+        });
+
+        // FUNÇÃO DE PREVIEW DE IMAGEM CORRIGIDA
+        function previewImagem(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Validar tipo de arquivo
+            if (!file.type.startsWith('image/')) {
+                mostrarNotificacao('Por favor, selecione apenas arquivos de imagem', 'erro');
+                return;
+            }
+            
+            // Validar tamanho (máx 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                mostrarNotificacao('A imagem deve ter no máximo 5MB', 'erro');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64String = e.target.result;
+                
+                // Atualizar preview
+                const previewImg = document.getElementById('preview-img');
+                const previewContainer = document.getElementById('preview-container');
+                const uploadPlaceholder = document.getElementById('upload-placeholder');
+                const uploadArea = document.querySelector('.image-upload-area');
+                
+                previewImg.src = base64String;
+                previewContainer.style.display = 'block';
+                uploadPlaceholder.style.display = 'none';
+                uploadArea.classList.add('has-image');
+                
+                // Salvar base64 no campo hidden
+                document.getElementById('imagemBase64').value = base64String;
+                
+                console.log('Imagem carregada, tamanho base64:', base64String.length); // Debug
+                
+                // Recriar ícones do Lucide
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            };
+            
+            reader.onerror = function() {
+                mostrarNotificacao('Erro ao ler o arquivo de imagem', 'erro');
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        function mostrarNotificacao(mensagem, tipo = 'sucesso') {
+            const notificacao = document.getElementById('notificacao');
+            notificacao.textContent = mensagem;
+            notificacao.className = `notificacao ${tipo}`;
+            notificacao.style.display = 'flex';
+            
+            setTimeout(() => {
+                notificacao.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+    <script src="/js/admin-mobile.js"></script>
+</body>
+</html>

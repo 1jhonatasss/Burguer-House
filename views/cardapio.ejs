@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/cardapio.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- PWA Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Burger House">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    
+    <!-- PWA Script -->
+    <script src="/js/pwa-install.js" defer></script>
+</head>
+<body>
+    <!-- Notificação Toast -->
+    <div id="notificacao" class="notificacao hidden">
+        <div class="notificacao-content">
+            <i data-lucide="check-circle"></i>
+            <span id="notificacao-texto">Item adicionado!</span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <button class="btn-voltar" onclick="window.location.href='/'">
+                <i data-lucide="arrow-left"></i>
+                <span>Voltar</span>
+            </button>
+
+            <div class="header-logo">
+                <div class="logo-text">
+                    <h1>BURGER HOUSE</h1>
+                    <p>Os melhores hambúrgueres</p>
+                </div>
+            </div>
+
+            <!-- Entrega e Horário -->
+            <div class="header-entrega-info">
+                <button class="btn-entrega-tipo" id="btnEntregaTipo">
+                    <i data-lucide="bike"></i>
+                    <span>Entrega</span>
+                    <i data-lucide="chevron-down" class="chevron-icon"></i>
+                </button>
+                
+                <div class="header-horario">
+                    <span class="horario-label">Hoje</span>
+                    <span class="horario-tempo">30 - 50 min</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Modal Tipo de Entrega -->
+    <div class="modal-entrega-tipo" id="modalEntregaTipo">
+        <div class="modal-entrega-content">
+            <button class="modal-entrega-close" id="modalEntregaClose">
+                <i data-lucide="x"></i>
+            </button>
+            
+            <div class="modal-entrega-icon">
+                <div class="icon-circle">
+                    <i data-lucide="utensils-crossed"></i>
+                </div>
+            </div>
+            
+            <h2 class="modal-entrega-titulo">Como você quer receber seu pedido?</h2>
+            
+            <div class="opcoes-entrega">
+                <label class="opcao-entrega" id="opcaoEntrega">
+                    <div class="opcao-icon">
+                        <i data-lucide="bike"></i>
+                    </div>
+                    <div class="opcao-info">
+                        <span class="opcao-titulo">Entrega</span>
+                        <span class="opcao-desc">A gente leva até você</span>
+                    </div>
+                    <div class="opcao-radio">
+                        <input type="radio" name="tipoEntrega" value="entrega" checked>
+                        <span class="radio-custom"></span>
+                    </div>
+                </label>
+                
+                <label class="opcao-entrega" id="opcaoRetirada">
+                    <div class="opcao-icon">
+                        <i data-lucide="shopping-bag"></i>
+                    </div>
+                    <div class="opcao-info">
+                        <span class="opcao-titulo">Retirada</span>
+                        <span class="opcao-desc">Você retira no local</span>
+                    </div>
+                    <div class="opcao-radio">
+                        <input type="radio" name="tipoEntrega" value="retirada">
+                        <span class="radio-custom"></span>
+                    </div>
+                </label>
+            </div>
+            
+            <button class="btn-confirmar-entrega" id="btnConfirmarEntrega">
+                Confirmar pedido
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Banner Promoções -->
+        <%- include('partials/bannerPromocoes', { banners: banners }) %>
+
+        <!-- Filtro de Categorias -->
+        <div class="categoria-wrapper-central">
+            <%- include('partials/filtroCategoria', { categoriaAtiva }) %>
+        </div>
+
+        <!-- Grid de Produtos -->
+        <div class="produtos-grid">
+            <% if (produtos.length > 0) { %>
+                <% produtos.forEach(produto => { %>
+                    <%- include('partials/cartaoProduto', { produto: produto }) %>
+                <% }) %>
+            <% } else { %>
+                <div class="empty-state">
+                    <i data-lucide="search-x"></i>
+                    <p>Nenhum produto encontrado nesta categoria</p>
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <!-- Carrinho -->
+    <%- include('partials/carrinho', { carrinho: carrinho }) %>
+
+    <!-- Modal de Personalização -->
+    <%- include('partials/modalPersonalizacao') %>
+
+    <script src="/js/cardapio.js"></script>
+    <script>
+        // Inicializa ícones Lucide
+        lucide.createIcons();
+        
+        // Carrinho global
+        const carrinhoGlobal = <%- JSON.stringify(carrinho) %>;
+        
+        // ============================================
+        // MODAL TIPO DE ENTREGA
+        // ============================================
+        const btnEntregaTipo = document.getElementById('btnEntregaTipo');
+        const modalEntregaTipo = document.getElementById('modalEntregaTipo');
+        const modalEntregaClose = document.getElementById('modalEntregaClose');
+        const btnConfirmarEntrega = document.getElementById('btnConfirmarEntrega');
+        
+        // Abrir modal
+        if (btnEntregaTipo) {
+            btnEntregaTipo.addEventListener('click', () => {
+                modalEntregaTipo.classList.add('active');
+                lucide.createIcons();
+            });
+        }
+        
+        // Fechar modal (X)
+        if (modalEntregaClose) {
+            modalEntregaClose.addEventListener('click', () => {
+                modalEntregaTipo.classList.remove('active');
+            });
+        }
+        
+        // Fechar modal (clique fora)
+        if (modalEntregaTipo) {
+            modalEntregaTipo.addEventListener('click', (e) => {
+                if (e.target === modalEntregaTipo) {
+                    modalEntregaTipo.classList.remove('active');
+                }
+            });
+        }
+        
+        // Confirmar entrega
+        if (btnConfirmarEntrega) {
+            btnConfirmarEntrega.addEventListener('click', () => {
+                const tipoSelecionado = document.querySelector('input[name="tipoEntrega"]:checked').value;
+                const btnTexto = btnEntregaTipo.querySelector('span');
+                
+                if (tipoSelecionado === 'entrega') {
+                    btnTexto.textContent = 'Entrega';
+                } else {
+                    btnTexto.textContent = 'Retirada';
+                }
+                
+                // Salvar no localStorage para usar depois
+                localStorage.setItem('tipoEntrega', tipoSelecionado);
+                
+                modalEntregaTipo.classList.remove('active');
+                
+                if (typeof mostrarNotificacao === 'function') {
+                    mostrarNotificacao(`Tipo de pedido: ${tipoSelecionado === 'entrega' ? 'Entrega' : 'Retirada'}`, 'sucesso');
+                }
+            });
+        }
+        
+        // Carregar tipo salvo
+        const tipoSalvo = localStorage.getItem('tipoEntrega');
+        if (tipoSalvo && btnEntregaTipo) {
+            const btnTexto = btnEntregaTipo.querySelector('span');
+            btnTexto.textContent = tipoSalvo === 'entrega' ? 'Entrega' : 'Retirada';
+            
+            const radioSalvo = document.querySelector(`input[name="tipoEntrega"][value="${tipoSalvo}"]`);
+            if (radioSalvo) radioSalvo.checked = true;
+        }
+    </script>
+    
+    <style>
+    /* ============================================
+       HEADER - ENTREGA E HORÁRIO
+       ============================================ */
+    .header-entrega-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .btn-entrega-tipo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--gray-800, #1f2937);
+        border: 1px solid var(--gray-700, #374151);
+        color: white;
+        padding: 0.6rem 1rem;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    
+    .btn-entrega-tipo:hover {
+        background: var(--gray-700, #374151);
+        border-color: var(--gray-600, #4b5563);
+    }
+    
+    .btn-entrega-tipo i {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .btn-entrega-tipo .chevron-icon {
+        width: 16px;
+        height: 16px;
+        opacity: 0.7;
+    }
+    
+    .header-horario {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0.5rem 1rem;
+        background: var(--gray-800, #1f2937);
+        border: 1px solid var(--gray-700, #374151);
+        border-radius: 0.75rem;
+    }
+    
+    .horario-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: white;
+    }
+    
+    .horario-tempo {
+        font-size: 0.8rem;
+        color: var(--gray-400, #9ca3af);
+    }
+    
+    /* ============================================
+       MODAL TIPO DE ENTREGA
+       ============================================ */
+    .modal-entrega-tipo {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 1000;
+        padding: 1rem;
+    }
+    
+    .modal-entrega-tipo.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .modal-entrega-content {
+        width: 100%;
+        max-width: 420px;
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        position: relative;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    }
+    
+    .modal-entrega-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--gray-100, #f3f4f6);
+        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gray-600, #4b5563);
+        transition: all 0.2s ease;
+    }
+    
+    .modal-entrega-close:hover {
+        background: var(--gray-200, #e5e7eb);
+        color: var(--gray-800, #1f2937);
+    }
+    
+    .modal-entrega-icon {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .icon-circle {
+        width: 80px;
+        height: 80px;
+        background: #fef3c7;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .icon-circle i {
+        width: 40px;
+        height: 40px;
+        color: #92400e;
+    }
+    
+    .modal-entrega-titulo {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #111827;
+        text-align: center;
+        margin: 0 0 1.5rem 0;
+    }
+    
+    .opcoes-entrega {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .opcao-entrega {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .opcao-entrega:hover {
+        border-color: #d1d5db;
+        background: #f9fafb;
+    }
+    
+    .opcao-entrega:has(input:checked) {
+        border-color: #111827;
+        background: #f9fafb;
+    }
+    
+    .opcao-icon {
+        width: 40px;
+        height: 40px;
+        background: #f3f4f6;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .opcao-icon i {
+        width: 20px;
+        height: 20px;
+        color: #374151;
+    }
+    
+    .opcao-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .opcao-titulo {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111827;
+    }
+    
+    .opcao-desc {
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+    
+    .opcao-radio {
+        position: relative;
+    }
+    
+    .opcao-radio input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    
+    .radio-custom {
+        width: 22px;
+        height: 22px;
+        border: 2px solid #d1d5db;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    
+    .opcao-radio input:checked + .radio-custom {
+        border-color: #111827;
+        background: #111827;
+    }
+    
+    .opcao-radio input:checked + .radio-custom::after {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: white;
+        border-radius: 50%;
+    }
+    
+    .btn-confirmar-entrega {
+        width: 100%;
+        background: #111827;
+        color: white;
+        border: none;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-confirmar-entrega:hover {
+        background: #1f2937;
+    }
+    
+    /* Responsivo */
+    @media (max-width: 768px) {
+        .header-entrega-info {
+            gap: 0.5rem;
+        }
+        
+        .btn-entrega-tipo {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+        }
+        
+        .btn-entrega-tipo span {
+            display: none;
+        }
+        
+        .header-horario {
+            padding: 0.4rem 0.75rem;
+        }
+        
+        .horario-label {
+            font-size: 0.7rem;
+        }
+        
+        .horario-tempo {
+            font-size: 0.75rem;
+        }
+    }
+    </style>
+</body>
+</html>

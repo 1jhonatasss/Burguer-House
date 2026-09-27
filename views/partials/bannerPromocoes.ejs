@@ -1,0 +1,572 @@
+<% if (banners && banners.length > 0) { %>
+<section class="banner-premium">
+  <div class="banner-carousel">
+    <!-- Progress Bar -->
+    <div class="banner-progress">
+      <div class="banner-progress-bar"></div>
+    </div>
+
+    <!-- Slides -->
+    <% banners.forEach((b, index) => { 
+      const precoOrig = parseFloat(b.precoOriginal) || 0;
+      const precoPromo = parseFloat(b.precoPromocional) || 0;
+      const desconto = precoOrig > 0 ? Math.round(((precoOrig - precoPromo) / precoOrig) * 100) : 0;
+    %>
+      <div class="banner-slide <%= index === 0 ? 'active' : '' %>">
+        <div class="banner-image-wrapper">
+          <img src="<%= b.imagemUrl %>" alt="<%= b.titulo %>" loading="lazy">
+        </div>
+        <div class="banner-overlay"></div>
+        
+        <!-- Conteúdo Premium -->
+        <div class="banner-content">
+          <div class="banner-badge">
+            <span class="badge-icon">🔥</span>
+            <span>OFERTA ESPECIAL</span>
+          </div>
+          
+          <h2 class="banner-title"><%= b.titulo %></h2>
+          
+          <div class="banner-pricing">
+            <div class="price-from">
+              <span class="price-label">De</span>
+              <span class="price-old">R$ <%= precoOrig.toFixed(2) %></span>
+            </div>
+            <div class="price-to">
+              <span class="price-label">Por apenas</span>
+              <span class="price-new">R$ <%= precoPromo.toFixed(2) %></span>
+            </div>
+            <div class="price-discount">
+              <span>-<%= desconto %>%</span>
+            </div>
+          </div>
+
+          
+        </div>
+      </div>
+    <% }) %>
+
+    <!-- Navegação Premium -->
+    <button class="banner-nav banner-prev" onclick="mudarSlide(-1)" aria-label="Anterior">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+    <button class="banner-nav banner-next" onclick="mudarSlide(1)" aria-label="Próximo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </button>
+
+    <!-- Indicadores Premium -->
+    <div class="banner-indicators">
+      <% banners.forEach((b, i) => { %>
+        <button class="banner-dot <%= i === 0 ? 'active' : '' %>" onclick="irParaSlide(<%= i %>)" aria-label="Slide <%= i + 1 %>">
+          <span class="dot-fill"></span>
+        </button>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<style>
+/* ========================================
+   BANNER PREMIUM - Elegante & Profissional
+   ======================================== */
+
+.banner-premium {
+  width: 100%;
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.banner-carousel {
+  position: relative;
+  height: 420px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #0a0a0a;
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+/* Progress Bar Superior */
+.banner-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 20;
+}
+
+.banner-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #f59e0b, #ea580c);
+  animation: progressFill 5s linear infinite;
+}
+
+@keyframes progressFill {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+/* Slides */
+.banner-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.banner-slide.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Imagem com Ken Burns */
+.banner-image-wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.banner-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1);
+  transition: transform 8s ease-out;
+  filter: brightness(0.6);
+}
+
+.banner-slide.active .banner-image-wrapper img {
+  transform: scale(1.08);
+}
+
+/* Overlay Premium */
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(135deg, rgba(0,0,0,0.7) 0%, transparent 50%),
+    linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+}
+
+/* Conteúdo */
+.banner-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  transform: translateY(20px);
+  opacity: 0;
+  animation: contentReveal 0.8s ease 0.3s forwards;
+}
+
+.banner-slide.active .banner-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+@keyframes contentReveal {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Badge */
+.banner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(234, 88, 12, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.badge-icon {
+  font-size: 1rem;
+  animation: flame 1s ease infinite;
+}
+
+@keyframes flame {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+/* Título */
+.banner-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white;
+  line-height: 1.1;
+  margin: 0;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  max-width: 500px;
+}
+
+/* Preços */
+.banner-pricing {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.price-from,
+.price-to {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.price-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.price-old {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: line-through;
+  font-weight: 500;
+}
+
+.price-new {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fbbf24;
+  text-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
+}
+
+.price-discount {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+/* CTA Button */
+.banner-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: white;
+  color: #0a0a0a;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.banner-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+}
+
+.banner-cta:hover svg {
+  transform: translateX(4px);
+}
+
+.banner-cta svg {
+  transition: transform 0.3s ease;
+}
+
+/* Navegação */
+.banner-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 15;
+  opacity: 0;
+}
+
+.banner-carousel:hover .banner-nav {
+  opacity: 1;
+}
+
+.banner-nav:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.banner-prev { left: 1.5rem; }
+.banner-next { right: 1.5rem; }
+
+/* Indicadores */
+.banner-indicators {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 3rem;
+  display: flex;
+  gap: 0.75rem;
+  z-index: 15;
+}
+
+.banner-dot {
+  width: 40px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.banner-dot:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.banner-dot.active {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.dot-fill {
+  display: block;
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #ea580c);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.banner-dot.active .dot-fill {
+  width: 100%;
+  animation: dotProgress 5s linear;
+}
+
+@keyframes dotProgress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+/* ========================================
+   RESPONSIVO
+   ======================================== */
+@media (max-width: 1024px) {
+  .banner-carousel {
+    height: 380px;
+  }
+  
+  .banner-content {
+    padding: 2rem;
+  }
+  
+  .banner-title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner-carousel {
+    height: 340px;
+    border-radius: 16px;
+  }
+  
+  .banner-content {
+    padding: 1.5rem;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .banner-title {
+    font-size: 1.5rem;
+    max-width: 100%;
+  }
+  
+  .banner-pricing {
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .price-new {
+    font-size: 1.5rem;
+  }
+  
+  .banner-nav {
+    width: 40px;
+    height: 40px;
+    opacity: 1;
+  }
+  
+  .banner-prev { left: 0.75rem; }
+  .banner-next { right: 0.75rem; }
+  
+  .banner-indicators {
+    right: 50%;
+    transform: translateX(50%);
+  }
+  
+  .banner-cta {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-carousel {
+    height: 300px;
+  }
+  
+  .banner-title {
+    font-size: 1.25rem;
+  }
+  
+  .banner-badge {
+    font-size: 0.65rem;
+    padding: 0.4rem 0.75rem;
+  }
+  
+  .price-from {
+    display: none;
+  }
+  
+  .price-new {
+    font-size: 1.35rem;
+  }
+  
+  .price-discount {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.75rem;
+  }
+  
+  .banner-dot {
+    width: 24px;
+  }
+}
+</style>
+
+<script>
+let slideIndex = 0;
+let slideTimer;
+const SLIDE_DURATION = 5000;
+
+function mostrarSlide(n) {
+  const slides = document.querySelectorAll('.banner-slide');
+  const dots = document.querySelectorAll('.banner-dot');
+  const progressBar = document.querySelector('.banner-progress-bar');
+  
+  if (slides.length === 0) return;
+
+  // Remove active de todos
+  slides.forEach(s => s.classList.remove('active'));
+  dots.forEach(d => d.classList.remove('active'));
+
+  // Calcula índice
+  slideIndex = (n + slides.length) % slides.length;
+  
+  // Ativa slide e dot atual
+  slides[slideIndex].classList.add('active');
+  dots[slideIndex].classList.add('active');
+
+  // Reinicia progress bar
+  if (progressBar) {
+    progressBar.style.animation = 'none';
+    progressBar.offsetHeight; // Trigger reflow
+    progressBar.style.animation = 'progressFill 5s linear infinite';
+  }
+
+  // Timer para próximo slide
+  clearTimeout(slideTimer);
+  slideTimer = setTimeout(() => mudarSlide(1), SLIDE_DURATION);
+}
+
+function mudarSlide(n) {
+  mostrarSlide(slideIndex + n);
+}
+
+function irParaSlide(n) {
+  mostrarSlide(n);
+}
+
+// Pausa no hover
+document.addEventListener('DOMContentLoaded', () => {
+  const carousel = document.querySelector('.banner-carousel');
+  
+  if (carousel) {
+    carousel.addEventListener('mouseenter', () => {
+      clearTimeout(slideTimer);
+    });
+    
+    carousel.addEventListener('mouseleave', () => {
+      slideTimer = setTimeout(() => mudarSlide(1), SLIDE_DURATION);
+    });
+  }
+  
+  mostrarSlide(0);
+});
+
+// Suporte a swipe no mobile
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const carousel = document.querySelector('.banner-carousel');
+  
+  if (carousel) {
+    carousel.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    
+    carousel.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+  }
+});
+
+function handleSwipe() {
+  const diff = touchStartX - touchEndX;
+  if (Math.abs(diff) > 50) {
+    if (diff > 0) {
+      mudarSlide(1); // Swipe left - próximo
+    } else {
+      mudarSlide(-1); // Swipe right - anterior
+    }
+  }
+}
+</script>
+<% } %>

@@ -1,0 +1,529 @@
+<!-- Modal de Personalização - Layout Lado a Lado -->
+<div class="personalizacao-modal" id="personalizacaoModal">
+    <div class="personalizacao-content-novo">
+        
+        <!-- Botão Fechar -->
+        <button class="personalizacao-close-novo" id="personalizacaoClose">
+            <i data-lucide="x"></i>
+        </button>
+        
+        <div class="personalizacao-layout">
+            
+            <!-- ESQUERDA - Imagem Grande -->
+            <div class="personalizacao-imagem-lado">
+                <img id="personalizacaoImagem" src="/images/default-burger.jpg" alt="Produto">
+            </div>
+            
+            <!-- DIREITA - Informações -->
+            <div class="personalizacao-info-lado">
+                
+                <!-- Header com nome e descrição -->
+                <div class="info-header">
+                    <h2 id="personalizacaoNome" class="produto-titulo-modal">Nome do Produto</h2>
+                    <p id="personalizacaoDescricao" class="produto-desc-modal">Descrição do produto</p>
+                    <p id="personalizacaoPrecoBase" class="produto-preco-modal">R$ 0,00</p>
+                </div>
+                
+                <!-- Corpo com ingredientes (scroll) -->
+                <div class="personalizacao-body-novo" id="personalizacaoBody">
+                    <!-- Conteúdo carregado via JavaScript -->
+                </div>
+                
+                <!-- Footer fixo -->
+                <div class="personalizacao-footer-novo">
+                    <div class="resumo-linha">
+                        <span class="resumo-label-novo">Adicionais</span>
+                        <span class="resumo-valor-novo resumo-adicionais-valor">R$ 0,00</span>
+                    </div>
+                    
+                    <div class="footer-acoes">
+                        <div class="quantidade-controle">
+                            <button class="btn-qty" id="btnQtyMenos">
+                                <i data-lucide="minus"></i>
+                            </button>
+                            <span class="qty-display" id="qtyDisplay">1</span>
+                            <button class="btn-qty" id="btnQtyMais">
+                                <i data-lucide="plus"></i>
+                            </button>
+                        </div>
+                        
+                        <button class="btn-adicionar-novo" id="btnPersonalizacaoConfirmar">
+                            Adicionar <span id="personalizacaoTotal">R$ 0,00</span>
+                        </button>
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<style>
+/* ============================================
+   MODAL PERSONALIZAÇÃO - LAYOUT LADO A LADO
+   ============================================ */
+
+.personalizacao-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.personalizacao-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.personalizacao-content-novo {
+    width: 100%;
+    max-width: 1290px;
+    height: 560px;
+    background: var(--gray-900, #111);
+    border-radius: 1rem;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.personalizacao-close-novo {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.personalizacao-close-novo:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.1);
+}
+
+/* Layout principal lado a lado */
+.personalizacao-layout {
+    display: flex;
+    height: 100%;
+}
+
+/* ESQUERDA - Imagem */
+.personalizacao-imagem-lado {
+    width: 560px;
+    min-width: 560px;
+    height: 100%;
+    background: var(--gray-800, #1a1a1a);
+    overflow: hidden;
+    position: relative;
+}
+
+.personalizacao-imagem-lado img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+}
+
+/* DIREITA - Informações */
+.personalizacao-info-lado {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--gray-900, #111);
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Header */
+.info-header {
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--gray-800, #222);
+    flex-shrink: 0;
+}
+
+.produto-titulo-modal {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    margin: 0 0 0.5rem 0;
+}
+
+.produto-desc-modal {
+    font-size: 0.9rem;
+    color: var(--gray-400, #9ca3af);
+    margin: 0 0 0.75rem 0;
+    line-height: 1.4;
+}
+
+.produto-preco-modal {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+}
+
+/* Body com scroll customizado */
+.personalizacao-body-novo {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 1.5rem;
+    min-height: 0;
+}
+
+/* ============================================
+   SCROLLBAR CUSTOMIZADA
+   ============================================ */
+.personalizacao-body-novo::-webkit-scrollbar {
+    width: 6px;
+}
+
+.personalizacao-body-novo::-webkit-scrollbar-track {
+    background: var(--gray-800, #1a1a1a);
+    border-radius: 3px;
+}
+
+.personalizacao-body-novo::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--primary-orange, #f97316), var(--primary-yellow, #fbbf24));
+    border-radius: 3px;
+}
+
+.personalizacao-body-novo::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--primary-yellow, #fbbf24), var(--primary-orange, #f97316));
+}
+
+/* Firefox */
+.personalizacao-body-novo {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-orange, #f97316) var(--gray-800, #1a1a1a);
+}
+
+/* Categorias de ingredientes */
+.categoria-ingredientes-novo {
+    margin-bottom: 1.5rem;
+}
+
+.categoria-header-novo {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--gray-800, #222);
+}
+
+.categoria-titulo-novo {
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+}
+
+.categoria-subtitulo-novo {
+    font-size: 0.8rem;
+    color: var(--gray-500, #6b7280);
+    margin: 0.25rem 0 0 0;
+}
+
+/* Item de ingrediente */
+.ingrediente-item-novo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--gray-800, #222);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ingrediente-item-novo:hover {
+    background: rgba(255, 255, 255, 0.02);
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    border-radius: 0.5rem;
+}
+
+.ingrediente-item-novo:last-child {
+    border-bottom: none;
+}
+
+.ingrediente-info-novo {
+    flex: 1;
+}
+
+.ingrediente-nome-novo {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: white;
+    margin: 0;
+}
+
+.ingrediente-desc-novo {
+    font-size: 0.8rem;
+    color: var(--gray-500, #6b7280);
+    margin: 0.2rem 0 0 0;
+}
+
+.ingrediente-preco-novo {
+    font-size: 0.9rem;
+    color: var(--gray-400, #9ca3af);
+    margin-right: 1rem;
+}
+
+.ingrediente-preco-novo.tem-preco {
+    color: var(--primary-yellow, #fbbf24);
+    font-weight: 600;
+}
+
+.ingrediente-check-novo {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--gray-600, #4b5563);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.ingrediente-item-novo.selecionado .ingrediente-check-novo {
+    background: var(--primary-yellow, #fbbf24);
+    border-color: var(--primary-yellow, #fbbf24);
+}
+
+.ingrediente-item-novo.selecionado .ingrediente-check-novo::after {
+    content: '✓';
+    color: #000;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+/* Sem adicionais */
+.sem-adicionais-novo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    color: var(--gray-500, #6b7280);
+}
+
+.sem-adicionais-novo i {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Seção comentário adicional (dentro do scroll) */
+.comentario-section-scroll {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-700, #333);
+}
+
+.comentario-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-300, #d1d5db);
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.comentario-box-novo {
+    background: var(--gray-800, #1a1a1a);
+    border: 1px solid var(--gray-600, #4b5563);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.comentario-box-novo:focus-within {
+    border-color: var(--primary-yellow, #fbbf24);
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.2);
+}
+
+.input-comentario-novo {
+    width: 100%;
+    min-height: 70px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 0.95rem;
+    outline: none;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.input-comentario-novo::placeholder {
+    color: var(--gray-500, #6b7280);
+}
+
+/* Footer */
+.personalizacao-footer-novo {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--gray-700, #333);
+    background: var(--gray-800, #1a1a1a);
+    flex-shrink: 0;
+}
+
+.resumo-linha {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.875rem;
+}
+
+.resumo-label-novo {
+    font-size: 0.9rem;
+    color: var(--gray-400, #9ca3af);
+}
+
+.resumo-valor-novo {
+    font-size: 0.9rem;
+    color: var(--primary-yellow, #fbbf24);
+    font-weight: 600;
+}
+
+.footer-acoes {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.quantidade-controle {
+    display: flex;
+    align-items: center;
+    background: var(--gray-700, #333);
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.btn-qty {
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-qty:hover {
+    background: var(--gray-600, #4b5563);
+}
+
+.btn-qty i {
+    width: 18px;
+    height: 18px;
+}
+
+.qty-display {
+    width: 40px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+}
+
+.btn-adicionar-novo {
+    flex: 1;
+    background: linear-gradient(135deg, var(--primary-red, #dc2626), var(--primary-orange, #f97316));
+    color: white;
+    border: none;
+    padding: 0.875rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-adicionar-novo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
+}
+
+.btn-adicionar-novo span {
+    font-weight: 800;
+}
+
+/* ============================================
+   RESPONSIVO - MOBILE
+   ============================================ */
+
+@media (max-width: 850px) {
+    .personalizacao-content-novo {
+        max-width: 95%;
+        height: auto;
+        max-height: 90vh;
+    }
+    
+    .personalizacao-layout {
+        flex-direction: column;
+        height: auto;
+        max-height: 90vh;
+    }
+    
+    .personalizacao-imagem-lado {
+        width: 100%;
+        min-width: auto;
+        height: 200px;
+    }
+    
+    .personalizacao-info-lado {
+        max-height: calc(90vh - 200px);
+        height: auto;
+    }
+    
+    .info-header {
+        padding: 1rem;
+    }
+    
+    .produto-titulo-modal {
+        font-size: 1.25rem;
+    }
+    
+    .personalizacao-body-novo {
+        padding: 1rem;
+        max-height: 200px;
+    }
+    
+    .personalizacao-footer-novo {
+        padding: 1rem;
+    }
+    
+    .footer-acoes {
+        flex-direction: column;
+    }
+    
+    .quantidade-controle {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .btn-adicionar-novo {
+        width: 100%;
+    }
+}
+</style>

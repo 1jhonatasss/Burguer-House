@@ -1,0 +1,32 @@
+<div class="filtro-categoria filtro-vertical">
+    <h3 class="titulo-categorias">Categorias</h3>
+
+    <div class="categorias-list-vertical">
+
+        <button class="categoria-btn <%= categoriaAtiva === 'todos' ? 'ativo' : '' %>" data-categoria="todos">
+            <i data-lucide="grid"></i>
+            <span>Todos</span>
+        </button>
+
+        <button class="categoria-btn <%= categoriaAtiva === 'hamburguer' ? 'ativo' : '' %>" data-categoria="hamburguer">
+            <i data-lucide="sandwich"></i>
+            <span>Hambúrgueres</span>
+        </button>
+
+        <button class="categoria-btn <%= categoriaAtiva === 'bebida' ? 'ativo' : '' %>" data-categoria="bebida">
+            <i data-lucide="coffee"></i>
+            <span>Bebidas</span>
+        </button>
+
+        <button class="categoria-btn <%= categoriaAtiva === 'combo' ? 'ativo' : '' %>" data-categoria="combo">
+            <i data-lucide="package"></i>
+            <span>Combos</span>
+        </button>
+
+        <button class="categoria-btn <%= categoriaAtiva === 'acompanhamento' ? 'ativo' : '' %>" data-categoria="acompanhamento">
+            <i data-lucide="utensils"></i>
+            <span>Acompanhamentos</span>
+        </button>
+
+    </div>
+</div>

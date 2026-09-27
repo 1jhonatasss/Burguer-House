@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos - Admin</title>
+    <link rel="stylesheet" href="/css/admin-mobile.css">
+    <link rel="stylesheet" href="/css/cardapio.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        :root {
+            --primary-red: #dc2626;
+            --primary-orange: #ea580c;
+            --primary-yellow: #f59e0b;
+            --gray-900: #111827;
+            --gray-800: #1f2937;
+            --gray-700: #374151;
+            --gray-600: #4b5563;
+            --gray-500: #6b7280;
+            --gray-400: #9ca3af;
+            --gray-300: #d1d5db;
+            --gray-200: #e5e7eb;
+            --gray-100: #f3f4f6;
+            --white: #ffffff;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            background: var(--gray-900);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .admin-sidebar {
+            width: 280px;
+            background: var(--gray-800);
+            border-right: 1px solid var(--gray-700);
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+            .admin-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+
+.btn-ver-banners {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem;
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+
+    .btn-ver-banners:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+    }
+
+    /* Filtros de Categoria */
+    .category-filters {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: rgba(31, 41, 55, 0.5);
+      border-radius: 1rem;
+      border: 1px solid rgba(55, 65, 81, 0.5);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .category-filter-btn {
+      padding: 0.75rem 1.5rem;
+      border: 2px solid transparent;
+      border-radius: 0.75rem;
+      background: rgba(55, 65, 81, 0.5);
+      color: #9ca3af;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .category-filter-btn:hover {
+      background: rgba(75, 85, 99, 0.7);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .category-filter-btn.active {
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      color: white;
+      border-color: #f59e0b;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+
+    .category-count {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .active .category-count {
+      background: rgba(255, 255, 255, 0.3);
+    }
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-700);
+        }
+
+        .admin-logo h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-yellow), var(--primary-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            color: var(--gray-300);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .admin-nav-link:hover,
+        .admin-nav-link.active {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-orange));
+            color: white;
+        }
+
+        .admin-nav-link i {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .admin-main {
+            flex: 1;
+            padding: 2rem;
+            margin-left: 280px;
+            overflow-y: auto;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-700);
+        }
+
+        .admin-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .admin-section {
+            background: var(--gray-800);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--gray-700);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 0.5rem;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--gray-800);
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-700);
+        }
+
+        .admin-table th {
+            color: var(--gray-400);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            background: var(--gray-700);
+        }
+
+        .admin-table td {
+            color: var(--gray-300);
+        }
+
+        .admin-table tr:hover {
+            background: var(--gray-750);
+        }
+
+        .status-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .status-ativo {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid #10b981;
+        }
+
+        .status-inativo {
+            background: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+            border: 1px solid #6b7280;
+        }
+
+        .status-promocao {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            border: 1px solid #f59e0b;
+        }
+
+        .btn-action {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn-edit {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-orange));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-action:hover {
+            opacity: 0.8;
+        }
+
+        .notificacao {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            color: white;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .notificacao.sucesso {
+            background: linear-gradient(135deg, #10b981, #047857);
+            border: 1px solid #10b981;
+        }
+
+        .notificacao.erro {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            border: 1px solid #ef4444;
+        }
+
+        .produto-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        .preco-original {
+            text-decoration: line-through;
+            color: var(--gray-500);
+            font-size: 0.875rem;
+        }
+
+        .preco-promocao {
+            color: var(--primary-yellow);
+            font-weight: bold;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-500);
+        }
+
+        .empty-state i {
+            width: 4rem;
+            height: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-sidebar">
+            <div class="admin-logo">
+                <i data-lucide="shield"></i>
+                <h1>Admin Burger</h1>
+            </div>
+
+            <nav class="admin-nav">
+                <a href="/admin" class="admin-nav-link">
+                    <i data-lucide="layout-dashboard"></i>
+                    Dashboard
+                </a>
+                <a href="/admin/pedidos" class="admin-nav-link">
+                    <i data-lucide="clipboard-list"></i>
+                    Pedidos Finalizados
+                </a>
+                <a href="/admin/produtos" class="admin-nav-link">
+                    <i data-lucide="package"></i>
+                    Produtos
+                </a>
+                <a href="/admin/banners" class="admin-nav-link">
+                    <i data-lucide="image"></i>
+                    Banners
+                </a>
+                <a href="/cardapio" class="admin-nav-link">
+                    <i data-lucide="store"></i>
+                    Voltar ao Cardápio
+                </a>
+            </nav>
+        </div>
+
+        <div class="admin-main">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+  <h1 style="color: white; margin: 0;">Gerenciar Produtos</h1>
+  <div style="display: flex; gap: 1rem;">
+    <a href="/admin/banners" class="btn-ver-banners">
+  <i data-lucide="image"></i>
+  Ver Banners
+</a>
+
+    <a href="/admin/produtos/cadastrar" class="btn-add">
+      <i data-lucide="plus"></i>
+      Novo Produto
+    </a>
+
+  </div>
+</div>
+            <div id="notificacao" class="notificacao" style="display: none;">
+                <i data-lucide="info"></i>
+                <span id="notificacao-texto"></span>
+            </div>
+
+            <!-- Filtros de Categoria -->
+            <div class="category-filters">
+                <button class="category-filter-btn active" data-category="todos" onclick="filtrarPorCategoria('todos')">
+                    <i data-lucide="grid-3x3"></i>
+                    Todos
+                    <span class="category-count" id="count-todos">0</span>
+                </button>
+                <button class="category-filter-btn" data-category="hamburguer" onclick="filtrarPorCategoria('hamburguer')">
+                    <i data-lucide="beef"></i>
+                    Hambúrgueres
+                    <span class="category-count" id="count-hamburguer">0</span>
+                </button>
+                <button class="category-filter-btn" data-category="bebida" onclick="filtrarPorCategoria('bebida')">
+                    <i data-lucide="cup-soda"></i>
+                    Bebidas
+                    <span class="category-count" id="count-bebida">0</span>
+                </button>
+                <button class="category-filter-btn" data-category="combo" onclick="filtrarPorCategoria('combo')">
+                    <i data-lucide="package"></i>
+                    Combos
+                    <span class="category-count" id="count-combo">0</span>
+                </button>
+                <button class="category-filter-btn" data-category="acompanhamento" onclick="filtrarPorCategoria('acompanhamento')">
+                    <i data-lucide="pizza"></i>
+                    Acompanhamentos
+                    <span class="category-count" id="count-acompanhamento">0</span>
+                </button>
+            </div>
+
+            <div class="admin-section">
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Imagem</th>
+                                <th>Produto</th>
+                                <th>Categoria</th>
+                                <th>Preço</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-produtos">
+                            <% if (produtos && produtos.length > 0) { %>
+                                <% produtos.forEach(produto => { %>
+                                    <%
+                                    const id = produto.produtoId || 0;
+                                    const nome = produto.produtoNome || 'N/A';
+                                    const descricao = produto.produtoDescricao || '';
+                                    const categoria = produto.produtoCategoria || 'N/A';
+                                    const preco = produto.produtoPreco || 0;
+                                    const precoPromo = produto.produtoPrecoPromocional;
+                                    const imagem = produto.produtoImagemUrl || '';
+                                    const emPromocao = produto.produtoEmPromocao === 1;
+                                    const disponivel = produto.produtoDisponivel === 1;
+                                    %>
+                                    <tr id="produto-<%= id %>">
+                                        <td>
+                                            <% if (imagem) { %>
+                                                <img src="<%= imagem %>" alt="<%= nome %>" class="produto-img">
+                                            <% } else { %>
+                                                <div style="width: 50px; height: 50px; background: #374151; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+                                                    <i data-lucide="image" style="color: #6b7280;"></i>
+                                                </div>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <strong style="color: white;"><%= nome %></strong>
+                                            <% if (descricao) { %>
+                                                <br>
+                                                <small style="color: #6b7280;">
+                                                    <%= descricao.length > 50 ? descricao.substring(0, 50) + '...' : descricao %>
+                                                </small>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <span style="text-transform: capitalize;"><%= categoria %></span>
+                                        </td>
+                                        <td>
+                                            <% if (emPromocao && precoPromo) { %>
+                                                <div class="preco-original">R$ <%= parseFloat(preco).toFixed(2) %></div>
+                                                <div class="preco-promocao">R$ <%= parseFloat(precoPromo).toFixed(2) %></div>
+                                            <% } else { %>
+                                                <div style="color: white;">R$ <%= parseFloat(preco).toFixed(2) %></div>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <span class="status-badge <%= disponivel ? 'status-ativo' : 'status-inativo' %>">
+                                                <%= disponivel ? 'Ativo' : 'Inativo' %>
+                                            </span>
+                                            <% if (emPromocao) { %>
+                                                <br>
+                                                <span class="status-badge status-promocao" style="margin-top: 0.25rem;">
+                                                    Promoção
+                                                </span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <button class="btn-action btn-edit" onclick="editarProduto(<%= id %>)">
+                                                <i data-lucide="edit"></i>
+                                                Editar
+                                            </button>
+                                            <button class="btn-action btn-delete" onclick="excluirProduto(<%= id %>, '<%= nome %>')">
+                                                <i data-lucide="trash-2"></i>
+                                                Excluir
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="6" class="empty-state">
+                                        <i data-lucide="package"></i>
+                                        <p>Nenhum produto encontrado</p>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+
+        function mostrarNotificacao(mensagem, tipo = 'sucesso') {
+            const notificacao = document.getElementById('notificacao');
+            const texto = document.getElementById('notificacao-texto');
+            
+            if (!notificacao || !texto) {
+                console.log('Notificação:', mensagem, 'Tipo:', tipo);
+                return;
+            }
+
+            notificacao.className = `notificacao ${tipo}`;
+            texto.textContent = mensagem;
+            notificacao.style.display = 'flex';
+            
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            
+            setTimeout(() => {
+                if (notificacao) {
+                    notificacao.style.display = 'none';
+                }
+            }, 3000);
+        }
+
+        function editarProduto(id) {
+            window.location.href = `/admin/produtos/editar/${id}`;
+        }
+
+        async function excluirProduto(id, nome) {
+            if (!confirm(`Tem certeza que deseja excluir o produto "${nome}"? Esta ação não pode ser desfeita.`)) {
+                return;
+            }
+
+            try {
+                console.log('🗑️ Excluindo produto:', id);
+                
+                const response = await fetch(`/admin/produtos/excluir/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const resultado = await response.json();
+                
+                if (resultado.ok) {
+                    mostrarNotificacao('Produto excluído com sucesso!', 'sucesso');
+                    
+                    const linha = document.getElementById(`produto-${id}`);
+                    if (linha) {
+                        linha.remove();
+                    }
+                    
+                    const tbody = document.getElementById('tabela-produtos');
+                    const linhasComDados = Array.from(tbody.querySelectorAll('tr[id]')).filter(tr => 
+                        tr.id && tr.id.startsWith('produto-')
+                    );
+                    
+                    if (linhasComDados.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="6" class="empty-state">
+                                    <i data-lucide="package"></i>
+                                    <p>Nenhum produto encontrado</p>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                } else {
+                    mostrarNotificacao('Erro ao excluir produto: ' + resultado.msg, 'erro');
+                }
+            } catch (error) {
+                console.error('Erro ao excluir produto:', error);
+                mostrarNotificacao('Erro de conexão ao excluir produto', 'erro');
+            }
+        }
+
+        // ============================================
+        // FILTROS DE CATEGORIA
+        // ============================================
+        let categoriaAtual = 'todos';
+
+        function contarPorCategoria() {
+            const rows = document.querySelectorAll('#tabela-produtos tr[id^="produto-"]');
+            const counts = {
+                todos: 0,
+                hamburguer: 0,
+                bebida: 0,
+                combo: 0,
+                acompanhamento: 0
+            };
+
+            rows.forEach(row => {
+                const categoriaCell = row.querySelector('td:nth-child(3)');
+                if (categoriaCell) {
+                    const categoria = categoriaCell.textContent.trim().toLowerCase();
+                    counts.todos++;
+                    if (counts[categoria] !== undefined) {
+                        counts[categoria]++;
+                    }
+                }
+            });
+
+            // Atualizar contadores na UI
+            Object.keys(counts).forEach(cat => {
+                const countEl = document.getElementById(`count-${cat}`);
+                if (countEl) {
+                    countEl.textContent = counts[cat];
+                }
+            });
+        }
+
+        function filtrarPorCategoria(categoria) {
+            categoriaAtual = categoria;
+            const rows = document.querySelectorAll('#tabela-produtos tr[id^="produto-"]');
+            
+            // Atualizar botões ativos
+            document.querySelectorAll('.category-filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-category="${categoria}"]`).classList.add('active');
+
+            // Filtrar linhas
+            let visibleCount = 0;
+            rows.forEach(row => {
+                const categoriaCell = row.querySelector('td:nth-child(3)');
+                if (categoriaCell) {
+                    const rowCategoria = categoriaCell.textContent.trim().toLowerCase();
+                    
+                    if (categoria === 'todos' || rowCategoria === categoria) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+
+            // Mostrar mensagem se não houver resultados
+            const tbody = document.getElementById('tabela-produtos');
+            const emptyRow = tbody.querySelector('td[colspan="6"]');
+            
+            if (visibleCount === 0 && !emptyRow) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <i data-lucide="package"></i>
+                            <p>Nenhum produto encontrado nesta categoria</p>
+                        </td>
+                    </tr>
+                `;
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }
+        }
+
+        // Inicializar contadores ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            contarPorCategoria();
+        });
+    </script>
+    <script src="/js/admin-mobile.js"></script>
+</body>
+</html>

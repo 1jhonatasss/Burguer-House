@@ -1,0 +1,207 @@
+<%
+const carrinhoSeguro = Array.isArray(carrinho) ? carrinho : [];
+const quantidadeTotal = carrinhoSeguro.reduce((sum, item) => sum + (Number(item.quantidade) || 0), 0);
+const total = carrinhoSeguro.reduce((sum, item) => {
+    const preco = Number(item.preco) || 0;
+    const quantidade = Number(item.quantidade) || 0;
+    return sum + (preco * quantidade);
+}, 0);
+%>
+
+<!-- CARRINHO DOCK FIXO NA PARTE INFERIOR -->
+<div class="carrinho-dock-container">
+    <div class="carrinho-dock collapsed" id="carrinhoDock">
+        <div class="carrinho-dock-header" onclick="toggleDock()">
+            <div class="carrinho-dock-info">
+                <div class="carrinho-dock-icon">
+                    <i data-lucide="shopping-cart"></i>
+                    <span class="carrinho-dock-badge" id="carrinhoBadge" style="<%= quantidadeTotal === 0 ? 'display: none;' : '' %>">
+                        <%= quantidadeTotal %>
+                    </span>
+                </div>
+                <div class="carrinho-dock-text">
+                    <h3 class="carrinho-dock-titulo">Seu Pedido</h3>
+                    <p class="carrinho-dock-subtitulo" id="carrinhoSubtitulo">
+                        <%= quantidadeTotal === 0 ? 'Carrinho vazio' : `${quantidadeTotal} ${quantidadeTotal === 1 ? 'item' : 'itens'}` %>
+                    </p>
+                </div>
+            </div>
+
+            <div class="carrinho-dock-actions">
+                <div id="carrinhoActionsContent" style="<%= quantidadeTotal === 0 ? 'display: none;' : 'display: flex; gap: 1rem; align-items: center;' %>">
+                    <div class="carrinho-dock-total">
+                        <span class="carrinho-dock-total-label">Total</span>
+                        <span class="carrinho-dock-total-valor" id="carrinhoTotalValor">R$ <%= total.toFixed(2) %></span>
+                    </div>
+                    <button class="btn-finalizar-dock" onclick="event.stopPropagation(); finalizarPedido();">
+                        <i data-lucide="check"></i>
+                        Finalizar
+                    </button>
+                </div>
+                <div class="carrinho-dock-toggle">
+                    <i data-lucide="chevron-up"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="carrinho-dock-content" id="carrinhoDockContent">
+            <% if (carrinhoSeguro.length === 0) { %>
+                <div class="carrinho-dock-vazio" id="carrinhoVazio">
+                    <i data-lucide="shopping-cart"></i>
+                    <p>Seu carrinho está vazio</p>
+                </div>
+            <% } else { %>
+                <!-- ✅ GRID HORIZONTAL COMPACTO - EXATAMENTE COMO A IMAGEM -->
+                <div class="carrinho-grid-horizontal" id="carrinhoItens">
+                    <% carrinhoSeguro.forEach(item => { %>
+                        <% if (item) { %>
+                            <% 
+                            const preco = Number(item.preco) || 0;
+                            const quantidade = Number(item.quantidade) || 0;
+                            const nome = item.nome || 'Produto';
+                            const id = item.id || '';
+                            const imagemUrl = item.imagem_url || '';
+                            const personalizado = item.personalizado || false;
+                            const ingredientes = item.ingredientes || [];
+                            const removidos = item.removidos || [];
+                            %>
+                            
+                            <!-- ✅ CARD COMPACTO HORIZONTAL -->
+                            <div class="carrinho-card-horizontal" data-item-id="<%= id %>">
+                                <!-- Imagem pequena -->
+                                <div class="carrinho-card-img">
+                                    <% if (imagemUrl) { %>
+                                        <img src="<%= imagemUrl %>" alt="<%= nome %>">
+                                    <% } else { %>
+                                        <div class="carrinho-card-img-placeholder">
+                                            <i data-lucide="image"></i>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                
+                                <!-- Info compacta -->
+                                <div class="carrinho-card-info">
+                                    <div class="carrinho-card-header">
+                                        <h4 class="carrinho-card-nome"><%= nome %></h4>
+                                        <span class="carrinho-card-preco">R$ <%= preco.toFixed(2) %></span>
+                                    </div>
+                                    
+                                    <!-- Modificações (se houver) -->
+                                    <% if (personalizado && (ingredientes.length > 0 || removidos.length > 0)) { %>
+                                        <div class="carrinho-card-mods">
+                                            <% if (ingredientes.length > 0) { %>
+                                                <span class="mod-tag add"><strong class="mod-icon mod-icon-add">+</strong> <%= ingredientes.map(i => i.ingNome).join(', ') %></span>
+                                            <% } %>
+                                            <% if (removidos.length > 0) { %>
+                                                <span class="mod-tag rem"><strong class="mod-icon mod-icon-rem">−</strong> <%= removidos.join(', ') %></span>
+                                            <% } %>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                
+                                <!-- Controles compactos -->
+                                <div class="carrinho-card-actions">
+                                    <% if (!personalizado) { %>
+                                        <div class="qty-mini">
+                                            <button class="qty-btn" onclick="atualizarQtd('<%= id %>', -1)">
+                                                <i data-lucide="minus"></i>
+                                            </button>
+                                            <span class="qty-num"><%= quantidade %></span>
+                                            <button class="qty-btn" onclick="atualizarQtd('<%= id %>', 1)">
+                                                <i data-lucide="plus"></i>
+                                            </button>
+                                        </div>
+                                    <% } else { %>
+                                        <span class="qty-fixed">Qtd: <%= quantidade %></span>
+                                    <% } %>
+                                    
+                                    <button class="btn-trash" onclick="removerItem('<%= id %>')">
+                                        <i data-lucide="trash-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% }) %>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleDock() {
+    const dock = document.getElementById('carrinhoDock');
+    dock.classList.toggle('collapsed');
+    dock.classList.toggle('expanded');
+    setTimeout(() => lucide?.createIcons(), 100);
+}
+
+// ✅ ABRIR CARRINHO AUTOMATICAMENTE AO ADICIONAR PRODUTO
+function abrirCarrinho() {
+    const dock = document.getElementById('carrinhoDock');
+    if (dock.classList.contains('collapsed')) {
+        dock.classList.remove('collapsed');
+        dock.classList.add('expanded');
+        setTimeout(() => lucide?.createIcons(), 100);
+    }
+}
+
+// ✅ ATUALIZAR QUANTIDADE SEM RELOAD
+async function atualizarQtd(itemId, mudanca) {
+    try {
+        const item = document.querySelector(`[data-item-id="${itemId}"]`);
+        if (!item) return;
+        
+        const qtyElement = item.querySelector('.qty-num');
+        const qty = parseInt(qtyElement?.textContent) || 1;
+        const novaQty = qty + mudanca;
+        
+        if (novaQty <= 0) {
+            await removerItem(itemId);
+            return;
+        }
+        
+        const response = await fetch('/cardapio/carrinho/atualizar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ itemId, quantidade: novaQty })
+        });
+        
+        const resultado = await response.json();
+        
+        if (resultado.ok) {
+            atualizarUICarrinho(resultado.carrinho);
+        } else {
+            mostrarNotificacao(resultado.msg || 'Erro ao atualizar quantidade', 'erro');
+        }
+    } catch (error) {
+        console.error('❌ Erro ao atualizar quantidade:', error);
+        mostrarNotificacao('Erro de conexão', 'erro');
+    }
+}
+
+// ✅ REMOVER ITEM SEM RELOAD
+async function removerItem(itemId) {
+    try {
+        const response = await fetch('/cardapio/carrinho/atualizar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ itemId, quantidade: 0 })
+        });
+        
+        const resultado = await response.json();
+        
+        if (resultado.ok) {
+            atualizarUICarrinho(resultado.carrinho);
+            mostrarNotificacao('Item removido do carrinho', 'sucesso');
+        } else {
+            mostrarNotificacao(resultado.msg || 'Erro ao remover item', 'erro');
+        }
+    } catch (error) {
+        console.error('❌ Erro ao remover item:', error);
+        mostrarNotificacao('Erro de conexão', 'erro');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => lucide?.createIcons());
+</script>
