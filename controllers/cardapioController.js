@@ -19,18 +19,36 @@ const ingredientesModelMock = [
   { ingId: 3, ingNome: "Cebola caramelizada", ingCategoria: "Adicionais", ingPrecoAdicional: 2.50 },
   { ingId: 4, ingNome: "Molho especial", ingCategoria: "Molhos", ingPrecoAdicional: 1.50 },
   { ingId: 5, ingNome: "Ovo", ingCategoria: "Adicionais", ingPrecoAdicional: 3.00 },
-  { ingId: 6, ingNome: "Picles", ingCategoria: "Adicionais", ingPrecoAdicional: 1.00 }
+  { ingId: 6, ingNome: "Picles", ingCategoria: "Adicionais", ingPrecoAdicional: 1.00 },
+  { ingId: 7, ingNome: "Cheddar cremoso", ingCategoria: "Queijos", ingPrecoAdicional: 3.50 },
+  { ingId: 8, ingNome: "Alface americana", ingCategoria: "Vegetais", ingPrecoAdicional: 1.50 },
+  { ingId: 9, ingNome: "Tomate", ingCategoria: "Vegetais", ingPrecoAdicional: 1.00 },
+  { ingId: 10, ingNome: "Catupiry", ingCategoria: "Queijos", ingPrecoAdicional: 3.00 },
+  { ingId: 11, ingNome: "Doritos", ingCategoria: "Adicionais", ingPrecoAdicional: 3.50 },
+  { ingId: 12, ingNome: "Onion rings", ingCategoria: "Adicionais", ingPrecoAdicional: 2.50 }
 ];
 
 // ✅ Vínculo produto -> ids de ingredientes disponíveis
 const produtoIngredientesMock = {
-  1: [1, 2, 4],       // X-Burger Clássico
-  2: [1, 2, 3, 4],    // X-Bacon
-  3: [],              // Batata Frita
-  4: []               // Refrigerante Lata
+  1: [1, 2, 4, 5, 6, 7, 8, 9],
+  2: [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12],
+  3: [],
+  4: [],
+  5: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  6: [1, 2, 7, 8, 9, 10, 11],
+  7: [],
+  8: [],
+  9: [],
+  10: [],
+  11: [],
+  12: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+  13: [],
+  14: [],
+  15: []
 };
 
 const produtosMock = [
+  // ============= HAMBÚRGUERES =============
   {
     id: 1, nome: "X-Burger Clássico", descricao: "Pão, carne, queijo, alface e tomate",
     preco: 22.90, preco_promocional: null,
@@ -39,12 +57,35 @@ const produtosMock = [
     ingredientes: ingredientesModelMock.filter(i => produtoIngredientesMock[1].includes(i.ingId))
   },
   {
-    id: 2, nome: "X-Bacon", descricao: "Pão, carne, bacon, queijo e molho especial",
+    id: 2, nome: "X-Bacon Especial", descricao: "Pão, carne, bacon crocante, queijo e molho especial",
     preco: 27.90, preco_promocional: 24.90,
     imagem_url: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=500",
     categoria: "hamburguer", em_promocao: true, disponivel: true,
     ingredientes: ingredientesModelMock.filter(i => produtoIngredientesMock[2].includes(i.ingId))
   },
+  {
+    id: 5, nome: "X-Tudo da Casa", descricao: "Carne, bacon, ovo, presunto, queijo, alface, tomate e molho especial",
+    preco: 32.90, preco_promocional: null,
+    imagem_url: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=500",
+    categoria: "hamburguer", em_promocao: false, disponivel: true,
+    ingredientes: ingredientesModelMock.filter(i => produtoIngredientesMock[5].includes(i.ingId))
+  },
+  {
+    id: 6, nome: "X-Salada Fitness", descricao: "Pão integral, carne magra, queijo branco, alface, tomate e cenoura",
+    preco: 25.90, preco_promocional: null,
+    imagem_url: "https://images.unsplash.com/photo-1520072959219-c595dc870360?w=500",
+    categoria: "hamburguer", em_promocao: false, disponivel: true,
+    ingredientes: ingredientesModelMock.filter(i => produtoIngredientesMock[6].includes(i.ingId))
+  },
+  {
+    id: 12, nome: "Smash Burger Duplo", descricao: "Dois hambúrgueres smashes, queijo cheddar duplo e cebola crocante",
+    preco: 35.90, preco_promocional: 29.90,
+    imagem_url: "https://images.unsplash.com/photo-1607013251379-e6eecfffe234?w=500",
+    categoria: "hamburguer", em_promocao: true, disponivel: true,
+    ingredientes: ingredientesModelMock.filter(i => produtoIngredientesMock[12].includes(i.ingId))
+  },
+
+  // ============= ACOMPANHAMENTOS =============
   {
     id: 3, nome: "Batata Frita", descricao: "Porção de batata frita crocante",
     preco: 14.90, preco_promocional: null,
@@ -52,10 +93,62 @@ const produtosMock = [
     categoria: "acompanhamento", em_promocao: false, disponivel: true, ingredientes: []
   },
   {
+    id: 7, nome: "Batata Frita com Cheddar", descricao: "Batata frita coberta com cheddar cremoso e bacon",
+    preco: 19.90, preco_promocional: null,
+    imagem_url: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=500",
+    categoria: "acompanhamento", em_promocao: false, disponivel: true, ingredientes: []
+  },
+  {
+    id: 8, nome: "Onion Rings", descricao: "Anéis de cebola empanados e crocantes (8 unidades)",
+    preco: 16.90, preco_promocional: null,
+    imagem_url: "https://images.unsplash.com/photo-1639024471283-03518883512d?w=500",
+    categoria: "acompanhamento", em_promocao: false, disponivel: true, ingredientes: []
+  },
+  {
+    id: 13, nome: "Nuggets de Frango", descricao: "10 unidades de nuggets crocantes com molho",
+    preco: 18.90, preco_promocional: null,
+    imagem_url: "https://images.unsplash.com/photo-1562967914-608f82629710?w=500",
+    categoria: "acompanhamento", em_promocao: false, disponivel: true, ingredientes: []
+  },
+
+  // ============= BEBIDAS =============
+  {
     id: 4, nome: "Refrigerante Lata", descricao: "350ml, diversos sabores",
     preco: 6.50, preco_promocional: null,
     imagem_url: "https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=500",
     categoria: "bebida", em_promocao: false, disponivel: true, ingredientes: []
+  },
+  {
+    id: 9, nome: "Suco Natural 500ml", descricao: "Laranja, limão ou maracujá, feito na hora",
+    preco: 9.90, preco_promocional: null,
+    imagem_url: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=500",
+    categoria: "bebida", em_promocao: false, disponivel: true, ingredientes: []
+  },
+  {
+    id: 10, nome: "Milkshake 400ml", descricao: "Chocolate, morango ou ovomaltine com chantilly",
+    preco: 16.90, preco_promocional: 13.90,
+    imagem_url: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=500",
+    categoria: "bebida", em_promocao: true, disponivel: true, ingredientes: []
+  },
+  {
+    id: 14, nome: "Água Mineral 500ml", descricao: "Com ou sem gás",
+    preco: 4.50, preco_promocional: null,
+    imagem_url: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=500",
+    categoria: "bebida", em_promocao: false, disponivel: true, ingredientes: []
+  },
+
+  // ============= COMBOS =============
+  {
+    id: 11, nome: "Combo Duplo", descricao: "2 X-Burgers + 2 batatas médias + 2 refrigerantes",
+    preco: 59.90, preco_promocional: 49.90,
+    imagem_url: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=500",
+    categoria: "combo", em_promocao: true, disponivel: true, ingredientes: []
+  },
+  {
+    id: 15, nome: "Combo Família", descricao: "4 X-Burgers + 2 batatas grandes + 4 refrigerantes",
+    preco: 119.90, preco_promocional: 99.90,
+    imagem_url: "https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=500",
+    categoria: "combo", em_promocao: true, disponivel: true, ingredientes: []
   }
 ];
 
@@ -76,16 +169,24 @@ const bannersMock = [
     bannerId: 1,
     titulo: "Combo Duplo em Oferta",
     imagemUrl: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=1200",
-    precoOriginal: 39.90,
-    precoPromocional: 29.90,
+    precoOriginal: 59.90,
+    precoPromocional: 49.90,
     ativo: 1
   },
   {
     bannerId: 2,
-    titulo: "X-Bacon Especial",
-    imagemUrl: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=1200",
-    precoOriginal: 32.90,
-    precoPromocional: 24.90,
+    titulo: "Smash Burger Duplo",
+    imagemUrl: "https://images.unsplash.com/photo-1607013251379-e6eecfffe234?w=1200",
+    precoOriginal: 35.90,
+    precoPromocional: 29.90,
+    ativo: 1
+  },
+  {
+    bannerId: 3,
+    titulo: "Milkshake com Desconto",
+    imagemUrl: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=1200",
+    precoOriginal: 16.90,
+    precoPromocional: 13.90,
     ativo: 1
   }
 ];
@@ -95,7 +196,6 @@ const cardapioController = {
   async cardapioView(req, res) {
     try {
       const agora = Date.now();
-      // ✅ Ignora cache no serverless da Vercel (instância nova a cada request)
       const cacheValido = false;
 
       if (cacheValido && cacheCardapio) {
@@ -148,7 +248,6 @@ const cardapioController = {
 
       const produtosComIngredientes = Array.from(produtosMap.values());
 
-      // ✅ Se não veio nada do banco, força o fallback
       if (produtosComIngredientes.length === 0) {
         throw new Error("Banco retornou vazio — usando mock");
       }
@@ -274,7 +373,7 @@ const cardapioController = {
       let produto = await produtoModel.obterPorId(produtoId);
 
       if (!produto || produto.produtoDisponivel !== 1) {
-        throw new Error("Produto não encontrado no banco"); // ✅ força cair no catch/fallback
+        throw new Error("Produto não encontrado no banco");
       }
 
       if (!req.session.carrinho) req.session.carrinho = [];
