@@ -1,5 +1,6 @@
-// server.js
-require('dotenv').config();
+if (!process.env.VERCEL) {
+  require('dotenv').config();
+}
 
 const express = require('express');
 const cookieSession = require('cookie-session');
