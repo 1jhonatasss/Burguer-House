@@ -33,24 +33,28 @@ const produtoIngredientesMock = {
 const produtosMock = [
   {
     id: 1, nome: "X-Burger Clássico", descricao: "Pão, carne, queijo, alface e tomate",
-    preco: 22.90, preco_promocional: null, imagem_url: "/uploads/produto_1768342564996_jjkb2k.png",
+    preco: 22.90, preco_promocional: null,
+    imagem_url: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500",
     categoria: "hamburguer", em_promocao: false, disponivel: true,
     ingredientes: ingredientesModelMock.filter(i => produtoIngredientesMock[1].includes(i.ingId))
   },
   {
     id: 2, nome: "X-Bacon", descricao: "Pão, carne, bacon, queijo e molho especial",
-    preco: 27.90, preco_promocional: 24.90, imagem_url: "/uploads/produto_1768342564996_jjkb2k.png",
+    preco: 27.90, preco_promocional: 24.90,
+    imagem_url: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=500",
     categoria: "hamburguer", em_promocao: true, disponivel: true,
     ingredientes: ingredientesModelMock.filter(i => produtoIngredientesMock[2].includes(i.ingId))
   },
   {
     id: 3, nome: "Batata Frita", descricao: "Porção de batata frita crocante",
-    preco: 14.90, preco_promocional: null, imagem_url: "/uploads/produto_1768342564996_jjkb2k.png",
+    preco: 14.90, preco_promocional: null,
+    imagem_url: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500",
     categoria: "acompanhamento", em_promocao: false, disponivel: true, ingredientes: []
   },
   {
     id: 4, nome: "Refrigerante Lata", descricao: "350ml, diversos sabores",
-    preco: 6.50, preco_promocional: null, imagem_url: "/uploads/produto_1768342564996_jjkb2k.png",
+    preco: 6.50, preco_promocional: null,
+    imagem_url: "https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=500",
     categoria: "bebida", em_promocao: false, disponivel: true, ingredientes: []
   }
 ];

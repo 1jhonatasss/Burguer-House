@@ -8,8 +8,8 @@ const ProdutoModel = require('../models/Produto');
 const ProdutoController = require('../controllers/ProdutoController');
 
 const produtosMockAdmin = [
-  { produtoId: 1, produtoNome: "X-Burger Clássico", produtoDescricao: "Pão, carne, queijo, alface e tomate", produtoPreco: 22.90, produtoCategoria: "hamburguer", produtoImagemUrl: "/uploads/produto_1768342564996_jjkb2k.png", produtoEmPromocao: 0, produtoPrecoPromocional: null, produtoDisponivel: 1 },
-  { produtoId: 2, produtoNome: "X-Bacon", produtoDescricao: "Pão, carne, bacon, queijo e molho especial", produtoPreco: 27.90, produtoCategoria: "hamburguer", produtoImagemUrl: "/uploads/produto_1768342564996_jjkb2k.png", produtoEmPromocao: 1, produtoPrecoPromocional: 24.90, produtoDisponivel: 1 }
+  { produtoId: 1, produtoNome: "X-Burger Clássico", produtoDescricao: "Pão, carne, queijo, alface e tomate", produtoPreco: 22.90, produtoCategoria: "hamburguer", produtoImagemUrl: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500", produtoEmPromocao: 0, produtoPrecoPromocional: null, produtoDisponivel: 1 },
+  { produtoId: 2, produtoNome: "X-Bacon", produtoDescricao: "Pão, carne, bacon, queijo e molho especial", produtoPreco: 27.90, produtoCategoria: "hamburguer", produtoImagemUrl: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=500", produtoEmPromocao: 1, produtoPrecoPromocional: 24.90, produtoDisponivel: 1 }
 ];
 
 const pedidosMockAdmin = [

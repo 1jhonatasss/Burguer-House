@@ -2439,7 +2439,6 @@ window.addEventListener("resize", () => {
    ============================================ */
 
 // ✅ VARIÁVEIS GLOBAIS PARA PAGAMENTO
-let pedidoAtual = null;
 let mercadoPagoPublicKey = null;
 let mp = null;
 
