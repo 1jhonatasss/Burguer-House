@@ -7,34 +7,36 @@ const PedidoModel = require('../models/Pedido');
 const ProdutoModel = require('../models/Produto');
 const ProdutoController = require('../controllers/ProdutoController');
 
+const produtosMockAdmin = [
+  { produtoId: 1, produtoNome: "X-Burger Clássico", produtoDescricao: "Pão, carne, queijo, alface e tomate", produtoPreco: 22.90, produtoCategoria: "hamburguer", produtoImagemUrl: "/uploads/produto_1768342564996_jjkb2k.png", produtoEmPromocao: 0, produtoPrecoPromocional: null, produtoDisponivel: 1 },
+  { produtoId: 2, produtoNome: "X-Bacon", produtoDescricao: "Pão, carne, bacon, queijo e molho especial", produtoPreco: 27.90, produtoCategoria: "hamburguer", produtoImagemUrl: "/uploads/produto_1768342564996_jjkb2k.png", produtoEmPromocao: 1, produtoPrecoPromocional: 24.90, produtoDisponivel: 1 }
+];
+
+const pedidosMockAdmin = [
+  { pedidoId: 1, pedidoNumero: "000123", pedidoTotal: 45.80, pedidoStatus: "pendente", pedidoObservacoes: "Sem cebola", pedidoDataCriacao: new Date().toISOString() },
+  { pedidoId: 2, pedidoNumero: "000124", pedidoTotal: 22.90, pedidoStatus: "pago", pedidoObservacoes: "", pedidoDataCriacao: new Date().toISOString() }
+];
+
+const bannersMockAdmin = [
+  { bannerId: 1, titulo: "Combo Duplo", imagemUrl: "/uploads/banners/banner-1763886882108-zvpef9.jpg", precoOriginal: 39.90, precoPromocional: 29.90, ativo: 1 }
+];
+
 const produtoController = new ProdutoController();
 
 // ✅ ROTA DO DASHBOARD ADMIN
 router.get('/', async (req, res) => {
     try {
-        console.log('📊 CARREGANDO DASHBOARD ADMIN');
-        
         let pedido = new PedidoModel();
         let produto = new ProdutoModel();
-        
         const pedidos = await pedido.listar();
         const produtos = await produto.listar();
-        
-        console.log('📊 DASHBOARD - Pedidos:', pedidos.length);
-        console.log('📊 DASHBOARD - Produtos:', produtos.length);
-        
-        res.render('admin/dashboard', {
-            title: 'Admin - Burger House',
-            pedidos: pedidos,
-            produtos: produtos
-        });
+
+        if (!pedidos.length && !produtos.length) throw new Error("Sem dados do banco");
+
+        res.render('admin/dashboard', { title: 'Admin - Burger House', pedidos, produtos });
     } catch (error) {
-        console.error('❌ ERRO NO DASHBOARD:', error);
-        res.render('admin/dashboard', {
-            title: 'Admin - Burger House',
-            pedidos: [],
-            produtos: []
-        });
+        console.warn('⚠️ Banco indisponível, usando dados de demonstração (dashboard admin)');
+        res.render('admin/dashboard', { title: 'Admin - Burger House', pedidos: pedidosMockAdmin, produtos: produtosMockAdmin });
     }
 });
 
@@ -66,13 +68,10 @@ router.get('/produtos', async (req, res) => {
             produtos: produtosFormatados
         });
     } catch (error) {
-        console.error('❌ ERRO AO CARREGAR PRODUTOS:', error);
-        res.render('admin/produtos', {
-            title: 'Produtos - Admin',
-            produtos: []
-        });
+        console.warn('⚠️ Banco indisponível, usando dados de demonstração (produtos admin)');
+        res.render('admin/produtos', { title: 'Produtos - Admin', produtos: produtosMockAdmin });
     }
-});
+    
 
 // ✅ ROTAS DE PRODUTOS QUE USAM O CONTROLLER (para cadastro/edição com ingredientes)
 router.get('/produtos/cadastrar', produtoController.cadastrarView.bind(produtoController));

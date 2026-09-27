@@ -124,25 +124,13 @@ app.get('/', (req, res) => {
 
 // ✅ INICIAR SERVIDOR
 const PORT = parseInt(process.env.PORT || 3000, 10);
-const server = app.listen(PORT)
-  .on('listening', () => {
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
     console.log(`🍔 Servidor rodando na porta ${PORT}`);
-    console.log(`⚡ GZIP: ✅ ATIVO (compressão ~70%)`);
-    console.log(`💳 Mercado Pago: ${process.env.MP_ACCESS_TOKEN_PROD ? '✅ CONFIGURADO (PRODUÇÃO)' : '❌ NÃO CONFIGURADO'}`);
-    console.log(`🔑 Public Key: ${process.env.MP_PUBLIC_KEY ? '✅ OK' : '❌ FALTANDO'}`);
-    console.log(`🌐 Ambiente: ${process.env.NODE_ENV || 'development'}`);
-  })
-  .on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
-      console.error(`❌ Porta ${PORT} em uso. Tentando ${PORT + 1}...`);
-      app.listen(PORT + 1, () => {
-        console.log(`🍔 Servidor rodando na porta ${PORT + 1}`);
-      });
-    } else {
-      console.error('❌ Erro ao iniciar servidor:', err);
-    }
   });
+} 
 
-// ✅ INICIALIZAR WEBSOCKET
+module.exports = app;
+
 const WebSocketManager = require('./utils/WebSocketManager');
 WebSocketManager.init(server);

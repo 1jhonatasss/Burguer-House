@@ -28,14 +28,10 @@ class BannerController {
                 banners: banners,
                 sucesso: req.query.sucesso === 'true'
             });
-        } catch (error) {
-            console.error('❌ ERRO AO LISTAR BANNERS:', error);
-            res.render('admin/banners', {
-                title: 'Banners - Admin',
-                banners: [],
-                erro: 'Erro ao carregar banners'
-            });
-        }
+            } catch (error) {
+        console.warn('⚠️ Banco indisponível, usando dados de demonstração (banners admin)');
+        res.render('admin/banners', { title: 'Banners - Admin', banners: bannersMockAdmin, sucesso: req.query.sucesso === 'true' });
+    }
     }
 
     // ============================================
