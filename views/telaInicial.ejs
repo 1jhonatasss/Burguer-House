@@ -22,20 +22,13 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-            overflow-x: hidden;
-            overflow-y: auto;
-            min-height: 100vh;
-            background: #050505;
-        }
-
-        @media (min-width: 769px) {
-            body {
-                overflow: hidden;
-                height: 100vh;
-            }
-        }
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    height: 100dvh;
+    background: #050505;
+}
 
         /* ============================================
            VERSÃO MOBILE
@@ -682,7 +675,6 @@
             .mobile-version .container {
                 padding-top: calc(1.5rem + env(safe-area-inset-top));
                 padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
-                justify-content: center;
             }
             
             .mobile-version .badge {
