@@ -29,36 +29,35 @@
     </div>
 
     <!-- Header -->
-    <!-- Header -->
-<header class="header">
-    <div class="header-container">
-        <button class="btn-voltar" onclick="window.location.href='/'">
-            <i data-lucide="arrow-left"></i>
-            <span>Voltar</span>
-        </button>
-
-        <div class="header-logo">
-            <div class="logo-text">
-                <h1>BURGER HOUSE</h1>
-                <p>Os melhores hambúrgueres</p>
-            </div>
-        </div>
-
-        <!-- Entrega e Horário -->
-        <div class="header-entrega-info">
-            <button class="btn-entrega-tipo" id="btnEntregaTipo">
-                <i data-lucide="bike"></i>
-                <span>Entrega</span>
-                <i data-lucide="chevron-down" class="chevron-icon"></i>
+    <header class="header">
+        <div class="header-container">
+            <button class="btn-voltar" onclick="window.location.href='/'">
+                <i data-lucide="arrow-left"></i>
+                <span>Voltar</span>
             </button>
-            
-            <div class="header-horario">
-                <span class="horario-label" id="horarioLabel">Hoje</span>
-                <span class="horario-tempo" id="horarioTempo">30 - 50 min</span>
+
+            <div class="header-logo">
+                <div class="logo-text">
+                    <h1>BURGER HOUSE</h1>
+                    <p>Os melhores hambúrgueres</p>
+                </div>
+            </div>
+
+            <!-- Entrega e Horário -->
+            <div class="header-entrega-info">
+                <button class="btn-entrega-tipo" id="btnEntregaTipo">
+                    <i data-lucide="bike"></i>
+                    <span>Entrega</span>
+                    <i data-lucide="chevron-down" class="chevron-icon"></i>
+                </button>
+                
+                <div class="header-horario">
+                    <span class="horario-label" id="horarioLabel">Hoje</span>
+                    <span class="horario-tempo" id="horarioTempo">30 - 50 min</span>
+                </div>
             </div>
         </div>
-    </div>
-</header>
+    </header>
 
     <!-- Modal Tipo de Entrega -->
     <div class="modal-entrega-tipo" id="modalEntregaTipo">
@@ -143,83 +142,98 @@
     <%- include('partials/modalPersonalizacao') %>
 
     <script src="/js/carrinho-local.js"></script>
-<script src="/js/cardapio.js"></script>
-<script>
-    // Inicializa ícones Lucide
-    lucide.createIcons();
-    
-    // Carrinho global
-    const carrinhoGlobal = <%- JSON.stringify(carrinho) %>;
-    
-    // ============================================
-    // MODAL TIPO DE ENTREGA
-    // ============================================
-    const modalEntregaTipo = document.getElementById('modalEntregaTipo');
-    const modalEntregaClose = document.getElementById('modalEntregaClose');
-    const btnConfirmarEntrega = document.getElementById('btnConfirmarEntrega');
+    <script src="/js/cardapio.js"></script>
+    <script>
+        // Inicializa ícones Lucide
+        lucide.createIcons();
+        
+        // Carrinho global
+        const carrinhoGlobal = <%- JSON.stringify(carrinho) %>;
+        
+        // ============================================
+        // MODAL TIPO DE ENTREGA
+        // ============================================
+        const modalEntregaTipo = document.getElementById('modalEntregaTipo');
+        const modalEntregaClose = document.getElementById('modalEntregaClose');
+        const btnConfirmarEntrega = document.getElementById('btnConfirmarEntrega');
+        const btnEntregaTipo = document.getElementById('btnEntregaTipo');
 
-    // Função pra atualizar o tempo com texto humano
-    function atualizarTempoPorTipo(tipo) {
-        const horarioTempo = document.getElementById('horarioTempo');
-        const horarioLabel = document.getElementById('horarioLabel');
+        // Função pra atualizar o tempo com texto humano
+        function atualizarTempoPorTipo(tipo) {
+            const horarioTempo = document.getElementById('horarioTempo');
+            const horarioLabel = document.getElementById('horarioLabel');
+            const btnTexto = document.querySelector('#btnEntregaTipo span');
+            const btnIcone = document.querySelector('#btnEntregaTipo i');
 
-        if (tipo === 'entrega') {
-            if (horarioLabel) horarioLabel.textContent = 'Entrega em';
-            if (horarioTempo) horarioTempo.textContent = '30 - 50 min';
-        } else {
-            if (horarioLabel) horarioLabel.textContent = 'Pronto em';
-            if (horarioTempo) horarioTempo.textContent = '15 - 25 min';
+            if (tipo === 'entrega') {
+                if (horarioLabel) horarioLabel.textContent = 'Entrega em';
+                if (horarioTempo) horarioTempo.textContent = '30 - 50 min';
+                if (btnTexto) btnTexto.textContent = 'Entrega';
+                if (btnIcone) btnIcone.setAttribute('data-lucide', 'bike');
+            } else {
+                if (horarioLabel) horarioLabel.textContent = 'Pronto em';
+                if (horarioTempo) horarioTempo.textContent = '15 - 25 min';
+                if (btnTexto) btnTexto.textContent = 'Retirada';
+                if (btnIcone) btnIcone.setAttribute('data-lucide', 'shopping-bag');
+            }
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-    }
+        // Abrir modal ao clicar no botão "Entrega"
+        if (btnEntregaTipo) {
+            btnEntregaTipo.addEventListener('click', () => {
+                modalEntregaTipo.classList.add('active');
+                lucide.createIcons();
+            });
+        }
 
-    // Confirmar entrega
-    if (btnConfirmarEntrega) {
-        btnConfirmarEntrega.addEventListener('click', () => {
-            const tipoSelecionado = document.querySelector('input[name="tipoEntrega"]:checked').value;
-            
-            atualizarTempoPorTipo(tipoSelecionado);
-            
-            localStorage.setItem('tipoEntrega', tipoSelecionado);
-            
-            modalEntregaTipo.classList.remove('active');
-            
-            if (typeof mostrarNotificacao === 'function') {
-                mostrarNotificacao(
-                    tipoSelecionado === 'entrega' 
-                        ? '🛵 Vamos levar até você em 30 - 50 min!' 
-                        : '🛍️ Você pode retirar em 15 - 25 min!', 
-                    'sucesso'
-                );
-            }
-        });
-    }
-
-    // Fechar modal (X)
-    if (modalEntregaClose) {
-        modalEntregaClose.addEventListener('click', () => {
-            modalEntregaTipo.classList.remove('active');
-        });
-    }
-
-    // Fechar modal (clique fora)
-    if (modalEntregaTipo) {
-        modalEntregaTipo.addEventListener('click', (e) => {
-            if (e.target === modalEntregaTipo) {
+        // Confirmar entrega
+        if (btnConfirmarEntrega) {
+            btnConfirmarEntrega.addEventListener('click', () => {
+                const tipoSelecionado = document.querySelector('input[name="tipoEntrega"]:checked').value;
+                
+                atualizarTempoPorTipo(tipoSelecionado);
+                
+                localStorage.setItem('tipoEntrega', tipoSelecionado);
+                
                 modalEntregaTipo.classList.remove('active');
-            }
-        });
-    }
+                
+                if (typeof mostrarNotificacao === 'function') {
+                    mostrarNotificacao(
+                        tipoSelecionado === 'entrega' 
+                            ? '🛵 Vamos levar até você em 30 - 50 min!' 
+                            : '🛍️ Você pode retirar em 15 - 25 min!', 
+                        'sucesso'
+                    );
+                }
+            });
+        }
 
-    // Carregar tipo salvo (aplica tempo/texto corretos)
-    const tipoSalvo = localStorage.getItem('tipoEntrega');
-    if (tipoSalvo) {
-        atualizarTempoPorTipo(tipoSalvo);
-        const radioSalvo = document.querySelector(`input[name="tipoEntrega"][value="${tipoSalvo}"]`);
-        if (radioSalvo) radioSalvo.checked = true;
-    }
-</script>
+        // Fechar modal (X)
+        if (modalEntregaClose) {
+            modalEntregaClose.addEventListener('click', () => {
+                modalEntregaTipo.classList.remove('active');
+            });
+        }
+
+        // Fechar modal (clique fora)
+        if (modalEntregaTipo) {
+            modalEntregaTipo.addEventListener('click', (e) => {
+                if (e.target === modalEntregaTipo) {
+                    modalEntregaTipo.classList.remove('active');
+                }
+            });
+        }
+
+        // Carregar tipo salvo (aplica tempo/texto corretos)
+        const tipoSalvo = localStorage.getItem('tipoEntrega');
+        if (tipoSalvo) {
+            atualizarTempoPorTipo(tipoSalvo);
+            const radioSalvo = document.querySelector(`input[name="tipoEntrega"][value="${tipoSalvo}"]`);
+            if (radioSalvo) radioSalvo.checked = true;
+        }
+    </script>
     
     <style>
     /* ============================================
@@ -244,6 +258,7 @@
         transition: all 0.3s ease;
         font-size: 0.9rem;
         font-weight: 500;
+        font-family: inherit;
     }
     
     .btn-entrega-tipo:hover {
@@ -470,6 +485,7 @@
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s ease;
+        font-family: inherit;
     }
     
     .btn-confirmar-entrega:hover {
