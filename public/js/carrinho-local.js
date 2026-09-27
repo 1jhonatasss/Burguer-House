@@ -20,17 +20,17 @@ function adicionarItemLocal(produto) {
     const itemId = Date.now() + Math.floor(Math.random() * 10000);
 
     const novoItem = {
-        id: itemId,
-        produtoId: produto.produtoId,
-        nome: produto.nome,
-        preco: produto.preco,
-        quantidade: 1,
-        imagem_url: produto.imagem_url,
-        personalizado: produto.personalizado || false,
-        ingredientes: produto.ingredientes || [],
-        removidos: produto.removidos || [],
-        observacao: produto.observacao || ''
-    };
+    id: itemId,
+    produtoId: produto.produtoId,
+    nome: produto.nome,
+    preco: produto.preco,
+    quantidade: 1,
+    imagem_url: produto.imagem_url,
+    personalizado: produto.personalizado || false,
+    ingredientes: produto.ingredientes || [],
+    removidos: produto.removidos || [],
+    observacao: produto.observacao || ''   // ✅ ESSA LINHA
+};
 
     carrinho.push(novoItem);
     setCarrinho(carrinho);
@@ -108,40 +108,43 @@ function atualizarUICarrinho(carrinho) {
         return;
     }
 
-    const html = carrinho.map(item => {
-        const preco = Number(item.preco) || 0;
-        const qtd = Number(item.quantidade) || 1;
-        const img = item.imagem_url || '';
-        const ing = (item.ingredientes || []).map(i => i.ingNome).join(', ');
-        const rem = (item.removidos || []).join(', ');
-        return `
-            <div class="carrinho-card-horizontal" data-item-id="${item.id}">
-                <div class="carrinho-card-img">
-                    ${img ? `<img src="${img}" alt="${item.nome}">` : `<div class="carrinho-card-img-placeholder"><i data-lucide="image"></i></div>`}
-                </div>
-                <div class="carrinho-card-info">
-                    <div class="carrinho-card-header">
-                        <h4 class="carrinho-card-nome">${item.nome}</h4>
-                        <span class="carrinho-card-preco">R$ ${preco.toFixed(2)}</span>
-                    </div>
-                    ${item.personalizado && (ing || rem) ? `
-                        <div class="carrinho-card-mods">
-                            ${ing ? `<span class="mod-tag add"><strong class="mod-icon mod-icon-add">+</strong> ${ing}</span>` : ''}
-                            ${rem ? `<span class="mod-tag rem"><strong class="mod-icon mod-icon-rem">−</strong> ${rem}</span>` : ''}
-                        </div>` : ''}
-                </div>
-                <div class="carrinho-card-actions">
-                    ${!item.personalizado ? `
-                        <div class="qty-mini">
-                            <button class="qty-btn" onclick="atualizarQtdLocal('${item.id}', ${qtd - 1})"><i data-lucide="minus"></i></button>
-                            <span class="qty-num">${qtd}</span>
-                            <button class="qty-btn" onclick="atualizarQtdLocal('${item.id}', ${qtd + 1})"><i data-lucide="plus"></i></button>
-                        </div>` : `<span class="qty-fixed">Qtd: ${qtd}</span>`}
-                    <button class="btn-trash" onclick="removerItemLocal('${item.id}')"><i data-lucide="trash-2"></i></button>
-                </div>
+const html = carrinho.map(item => {
+    const preco = Number(item.preco) || 0;
+    const qtd = Number(item.quantidade) || 1;
+    const img = item.imagem_url || '';
+    const ing = (item.ingredientes || []).map(i => i.ingNome).join(', ');
+    const rem = (item.removidos || []).join(', ');
+    const obs = item.observacao || '';
+
+    return `
+        <div class="carrinho-card-horizontal" data-item-id="${item.id}">
+            <div class="carrinho-card-img">
+                ${img ? `<img src="${img}" alt="${item.nome}">` : `<div class="carrinho-card-img-placeholder"><i data-lucide="image"></i></div>`}
             </div>
-        `;
-    }).join('');
+            <div class="carrinho-card-info">
+                <div class="carrinho-card-header">
+                    <h4 class="carrinho-card-nome">${item.nome}</h4>
+                    <span class="carrinho-card-preco">R$ ${preco.toFixed(2)}</span>
+                </div>
+                ${item.personalizado && (ing || rem || obs) ? `
+                    <div class="carrinho-card-mods">
+                        ${ing ? `<span class="mod-tag add"><strong class="mod-icon mod-icon-add">+</strong> ${ing}</span>` : ''}
+                        ${rem ? `<span class="mod-tag rem"><strong class="mod-icon mod-icon-rem">−</strong> ${rem}</span>` : ''}
+                        ${obs ? `<span class="mod-tag" style="background: #1f2937; color: #fbbf24; margin-top: 0.25rem; display: block;">📝 ${obs}</span>` : ''}
+                    </div>` : ''}
+            </div>
+            <div class="carrinho-card-actions">
+                ${!item.personalizado ? `
+                    <div class="qty-mini">
+                        <button class="qty-btn" onclick="atualizarQtdLocal('${item.id}', ${qtd - 1})"><i data-lucide="minus"></i></button>
+                        <span class="qty-num">${qtd}</span>
+                        <button class="qty-btn" onclick="atualizarQtdLocal('${item.id}', ${qtd + 1})"><i data-lucide="plus"></i></button>
+                    </div>` : `<span class="qty-fixed">Qtd: ${qtd}</span>`}
+                <button class="btn-trash" onclick="removerItemLocal('${item.id}')"><i data-lucide="trash-2"></i></button>
+            </div>
+        </div>
+    `;
+}).join('');
 
     container.innerHTML = `<div class="carrinho-grid-horizontal" id="carrinhoItens">${html}</div>`;
     lucide?.createIcons();
