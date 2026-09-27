@@ -22,12 +22,19 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            background: #050505;
-        }
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background: #050505;
+}
+
+@media (min-width: 769px) {
+    body {
+        overflow: hidden;
+        height: 100vh;
+    }
+}
 
         /* ============================================
            VERSÃO MOBILE - Simples e Animada
