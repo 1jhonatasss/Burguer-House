@@ -343,58 +343,17 @@ function inicializarEventListenersCarrinho() {
 // ✅ ATUALIZAR QUANTIDADE DO ITEM
 async function atualizarQuantidadeItem(itemId, mudanca) {
     try {
-        console.log('🔄 Atualizando quantidade do item:', itemId, 'Mudança:', mudanca);
-        
-        const itemElement = document.querySelector(`.carrinho-item[data-item-id="${itemId}"]`);
-        if (!itemElement) {
-            console.error('❌ Item não encontrado no DOM:', itemId);
-            return;
-        }
-        
-        const quantidadeElement = itemElement.querySelector('.quantidade');
-        const quantidadeAtual = parseInt(quantidadeElement.textContent) || 0;
-        const novaQuantidade = Math.max(0, quantidadeAtual + mudanca);
-        
-        console.log('📊 Quantidade atual:', quantidadeAtual, 'Nova quantidade:', novaQuantidade);
-        
-        // ➖ Se nova quantidade for 0, remove o item
-        if (novaQuantidade === 0) {
-            await removerItemCarrinho(itemId);
-            return;
-        }
-        
-        // 🔥 ENVIAR PARA O BACKEND A NOVA QUANTIDADE
-        const response = await fetch('/cardapio/carrinho/atualizar', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-                itemId: itemId, 
-                quantidade: novaQuantidade 
-            })
-        });
-        
-        const resultado = await response.json();
-        
-        if (resultado.ok) {
-            console.log('✅ Quantidade atualizada com sucesso');
-            atualizarUICarrinho(resultado.carrinho);
-            
-            // ✅ Mostrar notificação baseada na ação
-            if (mudanca > 0) {
-                mostrarNotificacao('Item duplicado no carrinho', 'sucesso');
-            } else {
-                mostrarNotificacao('Item removido do carrinho', 'sucesso');
-            }
-        } else {
-            console.error('❌ Erro ao atualizar quantidade:', resultado.msg);
-            mostrarNotificacao(resultado.msg, 'erro');
-        }
-        
+        const carrinho = getCarrinho();
+        const item = carrinho.find(i => String(i.id) === String(itemId));
+        if (!item) return;
+
+        const novaQtd = (Number(item.quantidade) || 1) + mudanca;
+        atualizarQtdLocal(itemId, novaQtd);
+
+        if (mudanca > 0) mostrarNotificacao('Quantidade aumentada', 'sucesso');
+        else mostrarNotificacao('Quantidade diminuída', 'sucesso');
     } catch (error) {
-        console.error('💥 Erro ao atualizar quantidade:', error);
-        mostrarNotificacao('Erro ao atualizar quantidade', 'erro');
+        console.error('💥 Erro:', error);
     }
 }
 
@@ -467,47 +426,10 @@ async function atualizarQtdCarrinho(itemId, mudanca) {
 // ✅ REMOVER ITEM DO CARRINHO (FUNÇÃO GLOBAL)
 async function removerItemCarrinho(itemId) {
     try {
-        console.log('🗑️ Removendo item:', itemId);
-        
-        const response = await fetch('/cardapio/carrinho/atualizar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ itemId, quantidade: 0 })
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const resultado = await response.json();
-        console.log('✅ Resposta do servidor:', resultado);
-        
-        if (resultado.ok) {
-            if (typeof atualizarUICarrinho === 'function') {
-                atualizarUICarrinho(resultado.carrinho);
-            } else {
-                console.warn('⚠️ Função atualizarUICarrinho não encontrada, recarregando...');
-                location.reload();
-            }
-            
-            if (typeof mostrarNotificacao === 'function') {
-                mostrarNotificacao('Item removido do carrinho', 'sucesso');
-            }
-        } else {
-            console.error('❌ Erro do servidor:', resultado.msg);
-            if (typeof mostrarNotificacao === 'function') {
-                mostrarNotificacao(resultado.msg || 'Erro ao remover item', 'erro');
-            } else {
-                alert(resultado.msg || 'Erro ao remover item');
-            }
-        }
+        removerItemLocal(itemId);
+        mostrarNotificacao('Item removido do carrinho', 'sucesso');
     } catch (error) {
-        console.error('💥 Erro ao remover item:', error);
-        if (typeof mostrarNotificacao === 'function') {
-            mostrarNotificacao('Erro de conexão: ' + error.message, 'erro');
-        } else {
-            alert('Erro de conexão: ' + error.message);
-        }
+        console.error('💥 Erro:', error);
     }
 }
 
@@ -1861,93 +1783,31 @@ function atualizarTotalPersonalizacao() {
 
 
 // ✅ FUNÇÃO PARA ADICIONAR PRODUTO PERSONALIZADO
-async function adicionarProdutoPersonalizado() {
+async function adicionarProdutoPersonalizado(produtoId, produtoNome, precoFinal, adicionais, descricao, removidos) {
     try {
-        const produtoId = produtoAtual?.id;
-        const produtoNome = produtoAtual?.nome || 'Produto';
-        const precoBase = precoBaseAtual;
+        console.log('🛒 Adicionando personalizado:', { produtoId, produtoNome, precoFinal, adicionais, removidos });
+
+        const card = document.querySelector(`[data-produto-id="${produtoId}"]`);
+        const imagem = card?.querySelector('img')?.src || '';
+
         const quantidade = window.quantidadePersonalizacao || 1;
-        
-        const adicionais = ingredientesSelecionados.map(ing => ({
-            ingId: ing.ingId,
-            ingNome: ing.ingNome || 'Adicional',
-            preco: parseFloat(ing.preco) || parseFloat(ing.ingPrecoAdicional) || 0
-        }));
-        
-        const precoAdicionais = adicionais.reduce((total, ing) => total + (parseFloat(ing.preco) || 0), 0);
-        const precoFinal = precoBase + precoAdicionais;
-        
-        console.log('🛒 Enviando ao carrinho:', {
+
+        const carrinho = adicionarItemLocal({
             produtoId,
-            precoBase,
-            precoAdicionais,
-            precoFinal,
-            adicionais
-        });
-        
-        // ✅ CAPTURAR COMENTÁRIO ADICIONAL
-        const comentarioEl = document.getElementById('inputComentarioAdicional');
-        const comentario = comentarioEl ? comentarioEl.value.trim() : '';
-        
-        // Fechar modal
-        const modal = document.getElementById('personalizacaoModal');
-        if (modal) modal.classList.remove('active');
-
-        const response = await fetch('/cardapio/carrinho/adicionar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                produtoId,
-                personalizado: true,
-                ingredientes: adicionais,
-                observacao: comentario,
-                removidos: comentario ? [comentario] : [],
-                precoPersonalizado: precoFinal,
-                descricaoPersonalizada: produtoNome,
-                quantidade: quantidade
-            })
+            nome: produtoNome,
+            preco: precoFinal,
+            imagem_url: imagem,
+            personalizado: true,
+            ingredientes: adicionais || [],
+            removidos: removidos || []
         });
 
-        const resultado = await response.json();
-
-        // ✅ Se retornou carrinho, considera sucesso
-        if (Array.isArray(resultado.carrinho) && resultado.carrinho.length > 0) {
-            const ultimoItem = resultado.carrinho[resultado.carrinho.length - 1];
-            // Adicionar observação se não existir
-            if (comentario && !ultimoItem.observacao) {
-                ultimoItem.observacao = comentario;
-            }
-            if (comentario && (!ultimoItem.removidos || !ultimoItem.removidos.length)) {
-                ultimoItem.removidos = [comentario];
-            }
-
-            // Atualizar UI do carrinho
-            if (typeof atualizarUICarrinho === 'function') {
-                atualizarUICarrinho(resultado.carrinho);
-            }
-            
-            // ✅ ABRIR CARRINHO AUTOMATICAMENTE
-            if (typeof abrirCarrinho === 'function') {
-                abrirCarrinho();
-            }
-            
-            // ✅ MOSTRAR FEEDBACK VERDE NO CARD
-            const card = document.querySelector(`[data-produto-id="${produtoId}"]`);
-            if (card) {
-                const ultimoItemId = resultado.carrinho[resultado.carrinho.length - 1]?.id;
-                mostrarFeedbackNoCard(card, ultimoItemId);
-            }
-            
-            // ✅ SEMPRE VERDE QUANDO ADICIONA
-            mostrarNotificacao('✅ Produto adicionado ao carrinho!', 'sucesso');
-        } else if (!resultado.ok) {
-            // Só mostra erro se realmente falhou
-            mostrarNotificacao(resultado.msg || 'Adicionado ao carrinho', 'sucesso');
-        }
+        abrirCarrinho();
+        mostrarNotificacao('✅ Produto adicionado ao carrinho!', 'sucesso');
 
     } catch (error) {
-        console.error('💥 Erro ao adicionar produto personalizado:', error);
-        mostrarNotificacao('Adicionado ao carrinho', 'sucesso');
+        console.error('💥 Erro:', error);
+        mostrarNotificacao('Erro ao adicionar produto', 'erro');
     }
 }
 
@@ -2264,52 +2124,37 @@ console.log('✅ Funções de atualização do carrinho carregadas!');
    ═══════════════════════════════════════════════════════════ */
 
 async function finalizarPedido() {
-    console.log('🎯 Iniciando finalização...');
-    
-    const observacoes = document.getElementById('carrinho-observacoes')?.value || '';
-    
-    try {
-        const response = await fetch('/cardapio/pedido/finalizar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ observacoes })
-        });
+    console.log('🎯 Finalizando pedido...');
 
-        const data = await response.json();
-        console.log('📦 Resposta backend:', data);
+    const carrinho = getCarrinho();
 
-        if (data.ok) {
-            const carrinhoModal = document.getElementById('carrinhoModal');
-            if (carrinhoModal) {
-                carrinhoModal.classList.remove('active');
-            }
-
-            const totalReal = parseFloat(data.total) || 0;
-            const carrinhoAtual = data.carrinho || [];
-            
-            console.log('💰 Total do backend:', totalReal);
-            console.log('🛒 Carrinho:', carrinhoAtual);
-
-            window.pedidoAtual = {
-                numeroPedido: data.numeroPedido,
-                total: totalReal,
-                carrinho: carrinhoAtual
-            };
-
-            console.log('✅ Pedido criado:', window.pedidoAtual);
-            console.log('🛒 Carrinho:', carrinhoAtual);
-            
-            setTimeout(() => {
-                console.log('🎨 Abrindo modal de pagamento...');
-                abrirModalPagamento(window.pedidoAtual);
-            }, 300);
-        } else {
-            alert(data.msg || 'Erro ao finalizar');
-        }
-    } catch (error) {
-        console.error('❌ Erro:', error);
-        alert('Erro ao processar pedido');
+    if (!carrinho || carrinho.length === 0) {
+        mostrarNotificacao('Seu carrinho está vazio', 'erro');
+        return;
     }
+
+    const total = carrinho.reduce((s, i) => s + (Number(i.preco) * Number(i.quantidade || 1)), 0);
+    const numeroPedido = Date.now().toString().slice(-6);
+
+    window.pedidoAtual = {
+        numeroPedido,
+        total,
+        carrinho
+    };
+
+    console.log('✅ Pedido criado (local):', window.pedidoAtual);
+
+    // Fechar dock do carrinho
+    const dock = document.getElementById('carrinhoDock');
+    if (dock) {
+        dock.classList.remove('expanded');
+        dock.classList.add('collapsed');
+    }
+
+    // Abrir modal de pagamento
+    setTimeout(() => {
+        abrirModalPagamento(window.pedidoAtual);
+    }, 300);
 }
 
 console.log('✅ Função finalizar corrigida para pegar total REAL do backend!');
@@ -2321,57 +2166,41 @@ console.log('✅ Função finalizar corrigida para pegar total REAL do backend!'
 // =============================================================
 async function adicionarAoCarrinho(produtoId, cardElemento = null) {
     try {
-        console.log('🛒 Adicionando produto ao carrinho:', produtoId);
+        console.log('🛒 Adicionando produto:', produtoId);
 
         if (!produtoId) {
             mostrarNotificacao('Erro: ID do produto não encontrado', 'erro');
             return;
         }
 
-        const response = await fetch('/cardapio/carrinho/adicionar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ produtoId })
-        });
-
-        const resultado = await response.json();
-
-        // ✅ Se o carrinho foi atualizado, considera sucesso
-        if (resultado.carrinho && resultado.carrinho.length > 0) {
-            // ✅ ATUALIZAR UI DO CARRINHO
-            if (typeof atualizarUICarrinho === 'function') {
-                atualizarUICarrinho(resultado.carrinho);
-            }
-            
-            // ✅ ABRIR CARRINHO AUTOMATICAMENTE
-            if (typeof abrirCarrinho === 'function') {
-                abrirCarrinho();
-            }
-            
-            // ✅ MOSTRAR FEEDBACK VERDE NO CARD
-            if (cardElemento) {
-                const card = cardElemento.closest('.produto-card') || cardElemento;
-                
-                // Pegar o último item adicionado
-                const ultimoItem = resultado.carrinho[resultado.carrinho.length - 1];
-                const ultimoItemId = ultimoItem.id;
-                
-                // Mostrar feedback com timer de 5 segundos
-                mostrarFeedbackNoCard(card, ultimoItemId);
-            }
-
-            // ✅ SEMPRE MOSTRA VERDE QUANDO ADICIONA
-            mostrarNotificacao('✅ Produto adicionado ao carrinho!', 'sucesso');
-            
-        } else if (!resultado.ok) {
-            // Só mostra erro se realmente falhou
-            mostrarNotificacao(resultado.msg || 'Erro ao adicionar produto', 'erro');
+        // ✅ Buscar dados do card na página
+        const card = cardElemento?.closest('.produto-card') || document.querySelector(`[data-produto-id="${produtoId}"]`);
+        if (!card) {
+            mostrarNotificacao('Produto não encontrado na página', 'erro');
             return;
         }
 
+        const nome = card.querySelector('.produto-nome')?.textContent?.trim() || 'Produto';
+        const precoTexto = card.querySelector('.preco-atual')?.textContent || '0';
+        const preco = parseFloat(precoTexto.replace('R$', '').replace(',', '.').trim()) || 0;
+        const imagem = card.querySelector('img')?.src || '';
+
+        const carrinho = adicionarItemLocal({
+            produtoId,
+            nome,
+            preco,
+            imagem_url: imagem,
+            personalizado: false,
+            ingredientes: [],
+            removidos: []
+        });
+
+        abrirCarrinho();
+        mostrarNotificacao('✅ Produto adicionado ao carrinho!', 'sucesso');
+
     } catch (error) {
-        console.error('💥 Erro ao adicionar ao carrinho:', error);
-        
+        console.error('💥 Erro:', error);
+        mostrarNotificacao('Erro ao adicionar produto', 'erro');
     }
 }
 
