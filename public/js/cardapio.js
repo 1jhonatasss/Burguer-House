@@ -1790,9 +1790,7 @@ async function adicionarProdutoPersonalizado(produtoId, produtoNome, precoFinal,
         const card = document.querySelector(`[data-produto-id="${produtoId}"]`);
         const imagem = card?.querySelector('img')?.src || '';
 
-        const quantidade = window.quantidadePersonalizacao || 1;
-
-        const carrinho = adicionarItemLocal({
+        adicionarItemLocal({
             produtoId,
             nome: produtoNome,
             preco: precoFinal,
@@ -2144,19 +2142,16 @@ async function finalizarPedido() {
 
     console.log('✅ Pedido criado (local):', window.pedidoAtual);
 
-    // Fechar dock do carrinho
     const dock = document.getElementById('carrinhoDock');
     if (dock) {
         dock.classList.remove('expanded');
         dock.classList.add('collapsed');
     }
 
-    // Abrir modal de pagamento
     setTimeout(() => {
         abrirModalPagamento(window.pedidoAtual);
     }, 300);
 }
-
 console.log('✅ Função finalizar corrigida para pegar total REAL do backend!');
 
 
@@ -2173,7 +2168,6 @@ async function adicionarAoCarrinho(produtoId, cardElemento = null) {
             return;
         }
 
-        // ✅ Buscar dados do card na página
         const card = cardElemento?.closest('.produto-card') || document.querySelector(`[data-produto-id="${produtoId}"]`);
         if (!card) {
             mostrarNotificacao('Produto não encontrado na página', 'erro');
@@ -2185,7 +2179,7 @@ async function adicionarAoCarrinho(produtoId, cardElemento = null) {
         const preco = parseFloat(precoTexto.replace('R$', '').replace(',', '.').trim()) || 0;
         const imagem = card.querySelector('img')?.src || '';
 
-        const carrinho = adicionarItemLocal({
+        adicionarItemLocal({
             produtoId,
             nome,
             preco,
