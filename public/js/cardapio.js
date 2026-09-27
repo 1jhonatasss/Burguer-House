@@ -1783,12 +1783,18 @@ function atualizarTotalPersonalizacao() {
 
 
 // ✅ FUNÇÃO PARA ADICIONAR PRODUTO PERSONALIZADO
+// ✅ FUNÇÃO PARA ADICIONAR PRODUTO PERSONALIZADO
 async function adicionarProdutoPersonalizado(produtoId, produtoNome, precoFinal, adicionais, descricao, removidos) {
     try {
         console.log('🛒 Adicionando personalizado:', { produtoId, produtoNome, precoFinal, adicionais, removidos });
 
         const card = document.querySelector(`[data-produto-id="${produtoId}"]`);
         const imagem = card?.querySelector('img')?.src || '';
+
+        // ✅ CAPTURA A OBSERVAÇÃO ADICIONAL
+        const comentarioEl = document.getElementById('inputComentarioAdicional');
+        const observacao = comentarioEl ? comentarioEl.value.trim() : '';
+        console.log('📝 Observação capturada:', observacao);
 
         adicionarItemLocal({
             produtoId,
@@ -1797,8 +1803,12 @@ async function adicionarProdutoPersonalizado(produtoId, produtoNome, precoFinal,
             imagem_url: imagem,
             personalizado: true,
             ingredientes: adicionais || [],
-            removidos: removidos || []
+            removidos: removidos || [],
+            observacao: observacao   // ✅ AQUI - passa a observação
         });
+
+        // Limpar o campo depois
+        if (comentarioEl) comentarioEl.value = '';
 
         abrirCarrinho();
         mostrarNotificacao('✅ Produto adicionado ao carrinho!', 'sucesso');
