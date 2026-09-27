@@ -50,7 +50,6 @@ router.get('/produtos', async (req, res) => {
         
         console.log('📦 PRODUTOS ENCONTRADOS:', lista.length);
         
-        // ✅ CORREÇÃO: Formatar produtos corretamente
         const produtosFormatados = lista.map(prod => ({
             produtoId: prod.produtoId,
             produtoNome: prod.produtoNome,
@@ -71,7 +70,9 @@ router.get('/produtos', async (req, res) => {
         console.warn('⚠️ Banco indisponível, usando dados de demonstração (produtos admin)');
         res.render('admin/produtos', { title: 'Produtos - Admin', produtos: produtosMockAdmin });
     }
-    
+
+});
+
 
 // ✅ ROTAS DE PRODUTOS QUE USAM O CONTROLLER (para cadastro/edição com ingredientes)
 router.get('/produtos/cadastrar', produtoController.cadastrarView.bind(produtoController));
