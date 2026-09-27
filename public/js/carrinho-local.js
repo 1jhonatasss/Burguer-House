@@ -146,3 +146,6 @@ function atualizarUICarrinho(carrinho) {
     container.innerHTML = `<div class="carrinho-grid-horizontal" id="carrinhoItens">${html}</div>`;
     lucide?.createIcons();
 }
+// Alias para compatibilidade com os botões antigos
+window.removerItem = removerItemLocal;
+window.atualizarQtd = atualizarQtdLocal;
