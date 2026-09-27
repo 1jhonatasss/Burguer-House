@@ -1791,7 +1791,7 @@ async function adicionarProdutoPersonalizado(produtoId, produtoNome, precoFinal,
         const card = document.querySelector(`[data-produto-id="${produtoId}"]`);
         const imagem = card?.querySelector('img')?.src || '';
 
-        // ✅ CAPTURA A OBSERVAÇÃO ADICIONAL
+        // ✅ CAPTURA A OBSERVAÇÃO
         const comentarioEl = document.getElementById('inputComentarioAdicional');
         const observacao = comentarioEl ? comentarioEl.value.trim() : '';
         console.log('📝 Observação capturada:', observacao);
@@ -1804,10 +1804,10 @@ async function adicionarProdutoPersonalizado(produtoId, produtoNome, precoFinal,
             personalizado: true,
             ingredientes: adicionais || [],
             removidos: removidos || [],
-            observacao: observacao   // ✅ AQUI - passa a observação
+            observacao: observacao   // ✅ PASSA A OBSERVAÇÃO
         });
 
-        // Limpar o campo depois
+        // Limpar o campo
         if (comentarioEl) comentarioEl.value = '';
 
         abrirCarrinho();
