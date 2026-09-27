@@ -2,24 +2,20 @@
 require('dotenv').config();
 
 const express = require('express');
-const session = require('express-session');
+const cookieSession = require('cookie-session');
 const path = require('path');
-const MemoryStore = require('memorystore')(session);
-const compression = require('compression'); // ✅ GZIP
+const compression = require('compression');
 const app = express();
 
-// ✅ GZIP - Comprime todas as respostas (reduz ~70% do tamanho)
 app.use(compression({
-  level: 6, // Nível de compressão (1-9, 6 é bom equilíbrio)
-  threshold: 1024, // Só comprime arquivos > 1KB
+  level: 6,
+  threshold: 1024,
   filter: (req, res) => {
-    // Comprime tudo exceto imagens (já são comprimidas)
     if (req.headers['x-no-compression']) return false;
     return compression.filter(req, res);
   }
 }));
 
-// PWA Routes
 app.get('/service-worker.js', (req, res) => {
   res.setHeader('Content-Type', 'application/javascript');
   res.sendFile(path.join(__dirname, 'public', 'service-worker.js'));
@@ -30,68 +26,47 @@ app.get('/manifest.json', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'manifest.json'));
 });
 
-// API Limpar Carrinho
 app.post('/api/carrinho/limpar', (req, res) => {
   req.session.carrinho = [];
   req.session.pedidoPendente = null;
   res.json({ ok: true, msg: 'Carrinho limpo' });
 });
 
-const fileUpload = require('express-fileupload');
-
-// ✅ CONFIGURAÇÃO DE VIEW ENGINE
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// ✅ MIDDLEWARES PRINCIPAIS
 app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ 
-    extended: true, 
-    limit: '50mb',
-    parameterLimit: 50000 
-}));
-app.use(fileUpload({
-    limits: { fileSize: 50 * 1024 * 1024 },
-    createParentPath: true,
-    parseNested: true,
-    useTempFiles: false
+app.use(express.urlencoded({
+  extended: true,
+  limit: '50mb',
+  parameterLimit: 50000
 }));
 
-// ✅ STATIC FILES COM CACHE OTIMIZADO
 app.use(express.static(path.join(__dirname, 'public'), {
   etag: true,
   lastModified: true,
   setHeaders: (res, filePath) => {
-    // CSS e JS - Cache de 7 dias
     if (filePath.endsWith('.js') || filePath.endsWith('.css')) {
-      res.setHeader('Cache-Control', 'public, max-age=604800'); // 7 dias
+      res.setHeader('Cache-Control', 'public, max-age=604800');
     }
-    // Imagens - Cache de 30 dias
     if (/\.(png|jpg|jpeg|gif|webp|svg|ico)$/i.test(filePath)) {
-      res.setHeader('Cache-Control', 'public, max-age=2592000'); // 30 dias
+      res.setHeader('Cache-Control', 'public, max-age=2592000');
     }
-    // Fontes - Cache de 1 ano
     if (/\.(woff|woff2|ttf|eot)$/i.test(filePath)) {
-      res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 ano
+      res.setHeader('Cache-Control', 'public, max-age=31536000');
     }
   }
 }));
 
-// ✅ SESSÃO
-app.use(session({
-  store: new MemoryStore({ checkPeriod: 86400000 }),
-  secret: process.env.SESSION_SECRET || 'burger-house-secret-2025',
-  resave: true,
-  saveUninitialized: true,
-  rolling: true,
-  cookie: {
-    secure: false,
-    maxAge: 1000 * 60 * 60 * 24,
-    httpOnly: true
-  }
+app.use(cookieSession({
+  name: 'burger-house-session',
+  keys: [process.env.SESSION_SECRET || 'burger-house-secret-2025'],
+  maxAge: 1000 * 60 * 60 * 24,
+  httpOnly: true,
+  sameSite: 'lax',
+  secure: process.env.NODE_ENV === 'production'
 }));
 
-// ✅ ROTAS
 const lanchesRoutes = require('./routes/lanchesRoute');
 const adminRoutes = require('./routes/adminRoute');
 const bannerRoutes = require('./routes/bannerRoute');
@@ -102,12 +77,11 @@ app.use('/admin', adminRoutes);
 app.use('/admin/banners', bannerRoutes);
 app.use('/pagamento', pagamentoRoutes);
 
-// ✅ HEALTH CHECK
 app.get('/health', (req, res) => {
   res.json({
     status: 'OK',
-    session: req.sessionID,
-    carrinho: req.session.carrinho || [],
+    environment: process.env.NODE_ENV || 'development',
+    naVercel: !!process.env.VERCEL,
     gzip: 'ativo',
     mercadoPago: {
       configured: !!process.env.MP_ACCESS_TOKEN_PROD,
@@ -117,21 +91,25 @@ app.get('/health', (req, res) => {
   });
 });
 
-// ✅ ROTA PRINCIPAL
 app.get('/', (req, res) => {
   res.render('telaInicial');
 });
 
-// ✅ INICIAR SERVIDOR
+app.use((err, req, res, next) => {
+  console.error('Erro:', err.message);
+  res.status(500).json({
+    error: 'Erro interno do servidor',
+    message: err.message
+  });
+});
+
 const PORT = parseInt(process.env.PORT || 3000, 10);
 
-// Só roda servidor local fora da Vercel
 if (!process.env.VERCEL) {
   const server = app.listen(PORT, () => {
     console.log(`🍔 Servidor rodando na porta ${PORT}`);
   });
-  
-  // WebSocket só funciona localmente
+
   try {
     const WebSocketManager = require('./utils/WebSocketManager');
     WebSocketManager.init(server);
