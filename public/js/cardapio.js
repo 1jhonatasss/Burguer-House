@@ -543,7 +543,7 @@ function atualizarConteudoCarrinhoHorizontal(carrinho) {
                                     `<span class="mod-tag rem"><strong class="mod-icon mod-icon-rem">−</strong> ${removidosTexto}</span>` 
                                     : ''}
                                 ${observacao ? 
-                                    `<span class="mod-tag obs" style="background: #1f2937; color: #fbbf24; margin-top: 0.25rem; display: block;">📝 ${observacao}</span>` 
+                                    `<span class="mod-tag obs" style="background: #2d2a29; color: #fafafa; margin-top: 0.25rem; display: block;"> ${observacao}</span>` 
                                     : ''}
                             </div>
                         </details>
@@ -1799,7 +1799,7 @@ async function adicionarProdutoPersonalizado(produtoId, produtoNome, precoFinal,
         // ✅ CAPTURA A OBSERVAÇÃO
         const comentarioEl = document.getElementById('inputComentarioAdicional');
         const observacao = comentarioEl ? comentarioEl.value.trim() : '';
-        console.log('📝 Observação capturada:', observacao);
+        console.log(' Observação capturada:', observacao);
 
         adicionarItemLocal({
             produtoId,
