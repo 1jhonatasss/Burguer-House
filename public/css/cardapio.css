@@ -680,6 +680,9 @@ body::after {
 
 /* iPhone SE e telas muito pequenas - reduz ainda mais */
 
+
+/* iPhone SE e telas muito pequenas - reduz ainda mais */
+
 /* ============================================
    QUEBRA DE TEXTO - EVITA ESTICAR HORIZONTAL
    ============================================ */
@@ -702,7 +705,7 @@ body::after {
 }
 
 .carrinho-card-info {
-    min-width: 0;   /* Importante! Flex items não quebram sem isso */
+    min-width: 0;
     overflow: hidden;
 }
 
@@ -723,7 +726,6 @@ body::after {
     max-width: 100%;
 }
 
-/* Carrinho dock container: evita estourar */
 .carrinho-dock-content {
     overflow-x: hidden;
 }
@@ -737,6 +739,7 @@ body::after {
     min-width: 0;
     flex-wrap: wrap;
 }
+
 /* Preços nunca quebram */
 .preco-atual,
 .preco-original,
@@ -747,6 +750,7 @@ body::after {
     word-break: keep-all;
     overflow-wrap: normal;
 }
+
 /* ============================================
    DETALHES COLAPSÁVEIS NO CARRINHO
    ============================================ */
@@ -798,14 +802,8 @@ body::after {
 }
 
 @keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-6px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 768px) {
@@ -816,10 +814,6 @@ body::after {
     .mods-content {
         padding-left: 0.75rem;
     }
-}
-.mods-details {
-    margin-top: 0.4rem;
-    width: 100%;
 }
 
 .mods-summary {
