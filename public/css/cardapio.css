@@ -331,7 +331,7 @@ body::after {
 
 .preco-original {
     font-size: 0.85rem;
-    color: var(--gray-500);
+    color: var(--white);
     text-decoration: line-through;
     line-height: 1;
     order: 1;
@@ -339,7 +339,7 @@ body::after {
 
 .preco-atual {
     font-size: 1.25rem;
-    font-weight: 800;
+    font-weight: 300;
     color: var(--primary-yellow);
     line-height: 1.1;
     order: 2;
