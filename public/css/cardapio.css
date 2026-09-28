@@ -554,12 +554,116 @@ body::after {
 .cart-item-price { font-size: 1rem; font-weight: 700; color: var(--primary-yellow); }
 .cart-item-controls { display: flex; align-items: center; gap: 0.5rem; }
 .cart-item-qty { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 0.3rem 0.6rem; font-size: 0.75rem; color: var(--gray-400); font-weight: 600; }
-.cart-item-delete { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: var(--primary-red); border-radius: 8px; padding: 0.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; width: 32px; height: 32px; }
-.cart-item-delete:hover { background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); }
-.cart-item-delete i { width: 14px; height: 14px; }
 .carrinho-lista-vertical::-webkit-scrollbar { width: 5px; }
 .carrinho-lista-vertical::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.03); border-radius: 10px; }
 .carrinho-lista-vertical::-webkit-scrollbar-thumb { background: var(--primary-orange); border-radius: 10px; }
+
+/* ============================================
+   BOTÃO DE LIXEIRA PREMIUM
+   ============================================ */
+.cart-item-delete,
+.btn-trash {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+        135deg,
+        rgba(220, 38, 38, 0.08) 0%,
+        rgba(220, 38, 38, 0.14) 100%
+    );
+    border: 1px solid rgba(220, 38, 38, 0.22);
+    border-radius: 10px;
+    color: var(--primary-red);
+    cursor: pointer;
+    overflow: hidden;
+    isolation: isolate;
+    transition: 
+        transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+        background 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.3s ease,
+        color 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.cart-item-delete { width: 32px; height: 32px; }
+.btn-trash        { width: 30px; height: 30px; }
+
+.cart-item-delete::before,
+.btn-trash::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.18) 50%,
+        transparent 70%
+    );
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+    z-index: -1;
+}
+
+.cart-item-delete i,
+.btn-trash i {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    stroke-width: 2.2;
+}
+
+.cart-item-delete:hover,
+.btn-trash:hover {
+    background: linear-gradient(
+        135deg,
+        rgba(220, 38, 38, 0.22) 0%,
+        rgba(220, 38, 38, 0.32) 100%
+    );
+    border-color: rgba(220, 38, 38, 0.55);
+    color: #ff4d4d;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 
+        0 6px 18px rgba(220, 38, 38, 0.35),
+        0 0 0 3px rgba(220, 38, 38, 0.08);
+}
+
+.cart-item-delete:hover::before,
+.btn-trash:hover::before {
+    transform: translateX(100%);
+}
+
+.cart-item-delete:hover i,
+.btn-trash:hover i {
+    transform: rotate(-8deg) scale(1.12);
+}
+
+.cart-item-delete:active,
+.btn-trash:active {
+    transform: translateY(0) scale(0.94);
+    box-shadow: 
+        0 2px 8px rgba(220, 38, 38, 0.3),
+        inset 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.cart-item-delete:focus-visible,
+.btn-trash:focus-visible {
+    outline: none;
+    border-color: var(--primary-red);
+    box-shadow: 
+        0 0 0 3px rgba(220, 38, 38, 0.35),
+        0 0 20px rgba(220, 38, 38, 0.25);
+}
+
+.cart-item-delete:disabled,
+.btn-trash:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+    filter: grayscale(0.5);
+}
 
 .carrinho-grid-horizontal { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-height: 400px; overflow-y: auto; padding-right: 0.5rem; }
 .carrinho-grid-horizontal::-webkit-scrollbar { width: 5px; }
@@ -588,9 +692,6 @@ body::after {
 .qty-btn i { width: 12px; height: 12px; }
 .qty-num { color: white; font-weight: 700; font-size: 0.85rem; min-width: 20px; text-align: center; }
 .qty-fixed { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 0.25rem 0.5rem; font-size: 0.7rem; color: var(--gray-400); font-weight: 600; }
-.btn-trash { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: var(--primary-red); border-radius: 8px; padding: 0.35rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; width: 30px; height: 30px; }
-.btn-trash:hover { background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); }
-.btn-trash i { width: 14px; height: 14px; }
 
 .notificacao { position: fixed; top: 20px; right: 20px; padding: 1rem 1.5rem; border-radius: 12px; background: var(--primary-green); color: white; z-index: 1000; display: flex; align-items: center; gap: 0.75rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: all 0.3s ease; }
 .notificacao.hidden { opacity: 0; transform: translateX(400px); pointer-events: none; }
@@ -727,7 +828,13 @@ body::after {
     .mod-tag { font-size: 0.7rem; padding: 0.2rem 0.4rem; }
     .qty-mini { padding: 0.2rem 0.35rem; }
     .qty-num { font-size: 0.8rem; }
-    .btn-trash { width: 28px; height: 28px; }
+    .cart-item-delete { width: 34px; height: 34px; }
+    .btn-trash        { width: 32px; height: 32px; }
+    .cart-item-delete i,
+    .btn-trash i {
+        width: 15px;
+        height: 15px;
+    }
     .modal-pagamento-header { padding: 1rem 1.25rem; }
     .modal-pagamento-header h2 { font-size: 1.1rem; }
     .modal-pagamento-body { padding: 1rem; }
@@ -913,12 +1020,52 @@ body::after {
     to { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 768px) {
-    .mods-summary {
-        font-size: 0.7rem;
+/* ============================================
+   ANIMAÇÃO DE REMOÇÃO DE ITEM
+   ============================================ */
+.carrinho-card-horizontal.removendo,
+.cart-item-box.removendo {
+    animation: itemRemove 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    pointer-events: none;
+}
+
+@keyframes itemRemove {
+    0% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        max-height: 200px;
+    }
+    60% {
+        opacity: 0.3;
+        transform: translateX(20px) scale(0.92);
+        background: rgba(220, 38, 38, 0.15);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(60px) scale(0.85);
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        margin: 0;
+    }
+}
+
+/* ============================================
+   ACESSIBILIDADE — MOVIMENTO REDUZIDO
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    .cart-item-delete,
+    .btn-trash,
+    .cart-item-delete i,
+    .btn-trash i,
+    .cart-item-delete::before,
+    .btn-trash::before {
+        transition: none !important;
+        animation: none !important;
     }
     
-    .mods-content {
-        padding-left: 0.75rem;
+    .cart-item-delete:hover,
+    .btn-trash:hover {
+        transform: none;
     }
 }
