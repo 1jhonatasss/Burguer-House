@@ -320,9 +320,30 @@ body::after {
 .produto-info { padding: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
 .produto-nome { font-size: 1rem; font-weight: 600; color: white; margin: 0; line-height: 1.3; }
 .produto-descricao { color: var(--gray-500); font-size: 0.8rem; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.produto-preco { display: flex; align-items: center; gap: 0; margin-top: auto; padding-top: 0.5rem; }
-.preco-atual { font-size: 1.25rem; font-weight: 300; color: var(--primary-yellow); }
-.preco-original { font-size: 1rem; color: var(--white); text-decoration: line-through; }
+.produto-preco {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+.preco-original {
+    font-size: 0.85rem;
+    color: var(--gray-500);
+    text-decoration: line-through;
+    line-height: 1;
+    order: 1;
+}
+
+.preco-atual {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--primary-yellow);
+    line-height: 1.1;
+    order: 2;
+}
 
 /* FEEDBACK VERDE */
 .feedback-adicionado {
