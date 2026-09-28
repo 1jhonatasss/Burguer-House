@@ -332,7 +332,7 @@ body::after {
 
 .preco-atual {
     font-size: 1.25rem;
-    font-weight: 300;
+    font-weight: 800;
     color: var(--primary-yellow);
     line-height: 1.1;
     order: 2;
