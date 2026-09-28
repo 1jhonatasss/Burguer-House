@@ -492,7 +492,7 @@ body::after {
 }
 
 .btn-finalizar-dock {
-    background: var(--primary-orange);
+    background: #10b981;
     border: none;
     color: white;
     padding: 0.8rem 1.5rem;
