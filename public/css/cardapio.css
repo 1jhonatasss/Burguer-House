@@ -22,7 +22,6 @@
     --white: #ffffff;
 }
 
-/* 🔧 ALTERAÇÃO 1: body respeita barra inferior do iPhone */
 body {
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--gray-900);
@@ -33,7 +32,6 @@ body {
     position: relative;
 }
 
-/* BACKGROUND EFFECTS - IGUAL TELA INICIAL */
 body::before {
     content: '';
     position: fixed;
@@ -66,7 +64,6 @@ body::after {
     50% { opacity: 0.8; transform: scale(1.05); }
 }
 
-/* 🔧 ALTERAÇÃO 2: header respeita notch do iPhone (só adiciona padding-top) */
 .header {
     background: rgba(10, 10, 10, 0.85);
     backdrop-filter: blur(20px);
@@ -124,7 +121,6 @@ body::after {
     font-weight: 400;
 }
 
-/* MAIN CONTENT */
 .main-content {
     max-width: 1400px;
     margin: 0 auto;
@@ -133,7 +129,6 @@ body::after {
     z-index: 1;
 }
 
-/* BANNER */
 .banner-promocoes {
     margin-bottom: 2rem;
     border-radius: 20px;
@@ -216,7 +211,6 @@ body::after {
 .dot { cursor: pointer; height: 8px; width: 8px; background-color: rgba(255,255,255,0.3); border-radius: 50%; transition: all 0.3s; }
 .dot.active, .dot:hover { background-color: var(--primary-orange); transform: scale(1.2); }
 
-/* CATEGORIAS */
 .categoria-wrapper-central { 
     width: 100%; 
     display: flex; 
@@ -277,7 +271,6 @@ body::after {
 .categoria-btn.ativo { background: var(--primary-orange); border-color: var(--primary-orange); color: white; box-shadow: 0 4px 20px rgba(234, 88, 12, 0.3); }
 .categoria-btn i { width: 16px; height: 16px; }
 
-/* GRID DE PRODUTOS */
 .produtos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -345,7 +338,6 @@ body::after {
     order: 2;
 }
 
-/* FEEDBACK VERDE */
 .feedback-adicionado {
     position: absolute;
     bottom: 0;
@@ -372,7 +364,6 @@ body::after {
 .feedback-bar { position: absolute; bottom: 0; left: 0; height: 3px; background: rgba(255, 255, 255, 0.7); width: 100%; animation: shrink 5s linear forwards; }
 @keyframes shrink { from { width: 100%; } to { width: 0%; } }
 
-/* 🔧 ALTERAÇÃO 3: carrinho respeita barra inferior do iPhone */
 .carrinho-dock-container { 
     position: fixed; 
     bottom: 0; 
@@ -405,7 +396,6 @@ body::after {
 .carrinho-dock-vazio i { width: 50px; height: 50px; margin-bottom: 1rem; opacity: 0.3; }
 .carrinho-dock-vazio p { font-size: 1rem; }
 
-/* LISTA VERTICAL CARRINHO */
 .carrinho-lista-vertical { display: flex; flex-direction: column; gap: 0.75rem; max-height: 400px; overflow-y: auto; padding: 1rem; padding-right: 0.5rem; }
 .cart-item-box { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 0.85rem; display: flex; gap: 0.85rem; transition: all 0.2s ease; align-items: flex-start; }
 .cart-item-box:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); }
@@ -429,7 +419,6 @@ body::after {
 .carrinho-lista-vertical::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.03); border-radius: 10px; }
 .carrinho-lista-vertical::-webkit-scrollbar-thumb { background: var(--primary-orange); border-radius: 10px; }
 
-/* GRID HORIZONTAL */
 .carrinho-grid-horizontal { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-height: 400px; overflow-y: auto; padding-right: 0.5rem; }
 .carrinho-grid-horizontal::-webkit-scrollbar { width: 5px; }
 .carrinho-grid-horizontal::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.03); border-radius: 10px; }
@@ -461,31 +450,22 @@ body::after {
 .btn-trash:hover { background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); }
 .btn-trash i { width: 14px; height: 14px; }
 
-/* NOTIFICAÇÕES */
 .notificacao { position: fixed; top: 20px; right: 20px; padding: 1rem 1.5rem; border-radius: 12px; background: var(--primary-green); color: white; z-index: 1000; display: flex; align-items: center; gap: 0.75rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: all 0.3s ease; }
 .notificacao.hidden { opacity: 0; transform: translateX(400px); pointer-events: none; }
 .notificacao-content { display: flex; align-items: center; gap: 0.5rem; }
 
-/* EMPTY STATE */
 .empty-state { grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: var(--gray-500); font-size: 1rem; }
 
-/* ============================================
-   RESPONSIVO
-   ============================================ */
-
-/* Tablet Landscape - 1024px */
 @media (max-width: 1200px) { 
     .produtos-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); } 
 }
 
-/* Tablet Portrait - 768px */
 @media (max-width: 1024px) {
     .main-content { padding: 1.25rem; }
     .produtos-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
     .carousel-container { height: 240px; }
 }
 
-/* Mobile Landscape - 640px */
 @media (max-width: 768px) {
     .header-container {
         flex-wrap: wrap;
@@ -495,7 +475,6 @@ body::after {
         overflow-x: hidden;
     }
 
-    /* Logo ocupa a linha toda em cima */
     .header-logo {
         order: -1;
         width: 100%;
@@ -511,7 +490,6 @@ body::after {
         font-size: 0.65rem;
     }
 
-    /* Botão voltar fica no canto esquerdo flutuando */
     .btn-voltar {
         position: absolute;
         top: 0.75rem;
@@ -530,7 +508,6 @@ body::after {
         height: 18px;
     }
 
-    /* Entrega + horário ficam na linha de baixo, ocupando tudo */
     .header-entrega-info {
         width: 100%;
         justify-content: space-between;
@@ -569,9 +546,7 @@ body::after {
     }
 }
 
-/* Mobile Portrait - 480px */
 @media (max-width: 480px) {
-    /* 🔧 ALTERAÇÃO 4: padding-bottom respeita safe-area */
     body { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
     .header-container { padding: 0.75rem; flex-wrap: wrap; justify-content: center; }
     .btn-voltar { padding: 0.5rem; }
@@ -621,7 +596,6 @@ body::after {
     .notificacao { padding: 0.875rem 1.25rem; font-size: 0.85rem; }
 }
 
-/* Mobile Pequeno - 360px */
 @media (max-width: 360px) {
     .header-container { padding: 0.65rem; }
     .logo-text h1 { font-size: 1rem; }
@@ -635,7 +609,6 @@ body::after {
     .qr-code-container img { max-width: 180px; }
 }
 
-/* MODAL PAGAMENTO */
 .modal-pagamento-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 9999; display: none; align-items: center; justify-content: center; }
 .modal-pagamento-overlay.ativo { display: flex !important; }
 .modal-pagamento { background: var(--gray-800); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6); width: 90%; max-width: 500px; max-height: 90vh; overflow: hidden; animation: slideUp 0.4s ease; }
@@ -675,13 +648,6 @@ body::after {
 .status-icon { width: 70px; height: 70px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 .status-icon.sucesso { background: rgba(16, 185, 129, 0.2); color: var(--primary-green); }
 .status-icon.erro { background: rgba(220, 38, 38, 0.2); color: var(--primary-red); }
-
-
-
-/* iPhone SE e telas muito pequenas - reduz ainda mais */
-
-
-/* iPhone SE e telas muito pequenas - reduz ainda mais */
 
 /* ============================================
    QUEBRA DE TEXTO - EVITA ESTICAR HORIZONTAL
@@ -740,7 +706,6 @@ body::after {
     flex-wrap: wrap;
 }
 
-/* Preços nunca quebram */
 .preco-atual,
 .preco-original,
 .preco-promocional,
@@ -814,51 +779,4 @@ body::after {
     .mods-content {
         padding-left: 0.75rem;
     }
-}
-
-.mods-summary {
-    cursor: pointer;
-    font-size: 0.75rem;
-    color: var(--primary-orange);
-    font-weight: 600;
-    padding: 0.3rem 0;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    user-select: none;
-    transition: color 0.2s ease;
-}
-
-.mods-summary:hover {
-    color: var(--primary-yellow);
-}
-
-.mods-summary::-webkit-details-marker {
-    display: none;
-}
-
-.mods-summary::before {
-    content: '▶';
-    font-size: 0.6rem;
-    transition: transform 0.2s ease;
-    display: inline-block;
-}
-
-.mods-details[open] .mods-summary::before {
-    transform: rotate(90deg);
-}
-
-.mods-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    padding-top: 0.4rem;
-    padding-left: 1rem;
-    animation: slideDown 0.2s ease;
-}
-
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-6px); }
-    to { opacity: 1; transform: translateY(0); }
 }
