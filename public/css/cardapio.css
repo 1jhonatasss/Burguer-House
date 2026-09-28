@@ -716,3 +716,13 @@ body::after {
     min-width: 0;
     flex-wrap: wrap;
 }
+/* Preços nunca quebram */
+.preco-atual,
+.preco-original,
+.preco-promocional,
+.carrinho-card-preco,
+.carrinho-dock-total-valor {
+    white-space: nowrap !important;
+    word-break: keep-all;
+    overflow-wrap: normal;
+}
