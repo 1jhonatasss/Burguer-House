@@ -3214,7 +3214,7 @@ if (!document.getElementById('style-lista-produtos')) {
         
         .produto-preco {
             color: var(--primary-yellow);
-            font-weight: 600;
+            font-weight: 300;
             font-size: 0.9rem;
         }
     `;
