@@ -89,8 +89,7 @@ function limparCarrinhoLocal() {
 
 function abrirCarrinho() {
     const dock = document.getElementById('carrinhoDock');
-    if (dock && dock.classList.contains('collapsed')) {
-        dock.classList.remove('collapsed');
+    if (dock && !dock.classList.contains('expanded')) {
         dock.classList.add('expanded');
         atualizarIcones();
     }

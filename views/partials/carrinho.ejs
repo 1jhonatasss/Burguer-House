@@ -1,5 +1,5 @@
 <div class="carrinho-dock-container">
-    <div class="carrinho-dock collapsed" id="carrinhoDock">
+    <div class="carrinho-dock" id="carrinhoDock">
         <div class="carrinho-dock-header" onclick="toggleDock()">
             <div class="carrinho-dock-info">
                 <div class="carrinho-dock-icon">
@@ -36,9 +36,7 @@
 <script>
 function toggleDock() {
     const dock = document.getElementById('carrinhoDock');
-    dock.classList.toggle('collapsed');
     dock.classList.toggle('expanded');
-    setTimeout(() => lucide?.createIcons(), 100);
 }
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof atualizarUICarrinho === 'function') atualizarUICarrinho();
