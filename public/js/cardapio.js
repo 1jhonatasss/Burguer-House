@@ -503,7 +503,7 @@ function atualizarConteudoCarrinhoHorizontal(carrinho) {
         const personalizado = item.personalizado || false;
         const ingredientes = item.ingredientes || [];
         const removidos = item.removidos || [];
-        const observacao = item.observacao || '';  // ✅ CAPTURA A OBSERVAÇÃO
+        const observacao = item.observacao || '';
 
         const ingredientesTexto = ingredientes.length > 0 
             ? ingredientes.map(i => i.ingNome).join(', ')
@@ -512,6 +512,8 @@ function atualizarConteudoCarrinhoHorizontal(carrinho) {
         const removidosTexto = removidos.length > 0 
             ? removidos.join(', ')
             : '';
+
+        const temDetalhes = personalizado && (ingredientesTexto || removidosTexto || observacao);
 
         return `
             <div class="carrinho-card-horizontal" data-item-id="${id}">
@@ -530,18 +532,21 @@ function atualizarConteudoCarrinhoHorizontal(carrinho) {
                         <span class="carrinho-card-preco">R$ ${preco.toFixed(2)}</span>
                     </div>
                     
-                    ${personalizado && (ingredientes.length > 0 || removidos.length > 0 || observacao) ? `
-                        <div class="carrinho-card-mods">
-                            ${ingredientes.length > 0 ? 
-                                `<span class="mod-tag add"><strong class="mod-icon mod-icon-add">+</strong> ${ingredientesTexto}</span>` 
-                                : ''}
-                            ${removidos.length > 0 ? 
-                                `<span class="mod-tag rem"><strong class="mod-icon mod-icon-rem">−</strong> ${removidosTexto}</span>` 
-                                : ''}
-                            ${observacao ? 
-                                `<span class="mod-tag obs" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid #fbbf24; padding: 0.3rem 0.6rem; border-radius: 6px; margin-top: 0.4rem; display: block; font-size: 0.75rem;"> ${observacao}</span>` 
-                                : ''}
-                        </div>
+                    ${temDetalhes ? `
+                        <details class="mods-details">
+                            <summary class="mods-summary">Ver detalhes</summary>
+                            <div class="mods-content">
+                                ${ingredientesTexto ? 
+                                    `<span class="mod-tag add"><strong class="mod-icon mod-icon-add">+</strong> ${ingredientesTexto}</span>` 
+                                    : ''}
+                                ${removidosTexto ? 
+                                    `<span class="mod-tag rem"><strong class="mod-icon mod-icon-rem">−</strong> ${removidosTexto}</span>` 
+                                    : ''}
+                                ${observacao ? 
+                                    `<span class="mod-tag obs" style="background: #1f2937; color: #fbbf24; margin-top: 0.25rem; display: block;">📝 ${observacao}</span>` 
+                                    : ''}
+                            </div>
+                        </details>
                     ` : ''}
                 </div>
                 
