@@ -1811,7 +1811,7 @@ async function adicionarProdutoPersonalizado(produtoId, produtoNome, precoFinal,
         if (comentarioEl) comentarioEl.value = '';
 
         abrirCarrinho();
-        mostrarNotificacao('✅ Produto adicionado ao carrinho!', 'sucesso');
+        mostrarNotificacao('Produto adicionado ao carrinho!', 'sucesso');
 
     } catch (error) {
         console.error('💥 Erro:', error);
@@ -2200,7 +2200,7 @@ async function adicionarAoCarrinho(produtoId, cardElemento = null) {
         });
 
         abrirCarrinho();
-        mostrarNotificacao('✅ Produto adicionado ao carrinho!', 'sucesso');
+        mostrarNotificacao('Produto adicionado ao carrinho!', 'sucesso');
 
     } catch (error) {
         console.error('💥 Erro:', error);

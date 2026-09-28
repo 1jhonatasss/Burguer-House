@@ -115,6 +115,7 @@ const html = carrinho.map(item => {
     const ing = (item.ingredientes || []).map(i => i.ingNome).join(', ');
     const rem = (item.removidos || []).join(', ');
     const obs = item.observacao || '';
+    const temDetalhes = item.personalizado && (ing || rem || obs);
 
     return `
         <div class="carrinho-card-horizontal" data-item-id="${item.id}">
@@ -126,12 +127,16 @@ const html = carrinho.map(item => {
                     <h4 class="carrinho-card-nome">${item.nome}</h4>
                     <span class="carrinho-card-preco">R$ ${preco.toFixed(2)}</span>
                 </div>
-                ${item.personalizado && (ing || rem || obs) ? `
-                    <div class="carrinho-card-mods">
-                        ${ing ? `<span class="mod-tag add"><strong class="mod-icon mod-icon-add">+</strong> ${ing}</span>` : ''}
-                        ${rem ? `<span class="mod-tag rem"><strong class="mod-icon mod-icon-rem">−</strong> ${rem}</span>` : ''}
-                        ${obs ? `<span class="mod-tag" style="background: #1f2937; color: #fbbf24; margin-top: 0.25rem; display: block;">📝 ${obs}</span>` : ''}
-                    </div>` : ''}
+                ${temDetalhes ? `
+                    <details class="mods-details">
+                        <summary class="mods-summary">Ver detalhes</summary>
+                        <div class="mods-content">
+                            ${ing ? `<span class="mod-tag add"><strong class="mod-icon mod-icon-add">+</strong> ${ing}</span>` : ''}
+                            ${rem ? `<span class="mod-tag rem"><strong class="mod-icon mod-icon-rem">−</strong> ${rem}</span>` : ''}
+                            ${obs ? `<span class="mod-tag" style="background: #1f2937; color: #fbbf24; margin-top: 0.25rem; display: block;">📝 ${obs}</span>` : ''}
+                        </div>
+                    </details>
+                ` : ''}
             </div>
             <div class="carrinho-card-actions">
                 ${!item.personalizado ? `

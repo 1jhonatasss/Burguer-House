@@ -747,3 +747,73 @@ body::after {
     word-break: keep-all;
     overflow-wrap: normal;
 }
+/* ============================================
+   DETALHES COLAPSÁVEIS NO CARRINHO
+   ============================================ */
+.mods-details {
+    margin-top: 0.4rem;
+    width: 100%;
+}
+
+.mods-summary {
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--primary-orange);
+    font-weight: 600;
+    padding: 0.3rem 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    user-select: none;
+    transition: color 0.2s ease;
+}
+
+.mods-summary:hover {
+    color: var(--primary-yellow);
+}
+
+.mods-summary::-webkit-details-marker {
+    display: none;
+}
+
+.mods-summary::before {
+    content: '▶';
+    font-size: 0.6rem;
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+
+.mods-details[open] .mods-summary::before {
+    transform: rotate(90deg);
+}
+
+.mods-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding-top: 0.4rem;
+    padding-left: 1rem;
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .mods-summary {
+        font-size: 0.7rem;
+    }
+    
+    .mods-content {
+        padding-left: 0.75rem;
+    }
+}
